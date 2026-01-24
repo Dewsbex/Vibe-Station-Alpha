@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v116.0-HI-RES-EMOTION</div>
+        <div>v117.0-ULTRA-RES-EXPANDED</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -374,7 +374,7 @@
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
                 const bufferCanvas = document.createElement('canvas');
-                const gridRes = 180; /* HI-RES UPGRADE */
+                const gridRes = 256; /* ULTRA-RES UPGRADE */
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 const bCtx = bufferCanvas.getContext('2d');
 
@@ -426,7 +426,7 @@
                     bCtx.clearRect(0, 0, gridRes, gridRes);
                     bCtx.save();
                     bCtx.translate(gridRes / 2, gridRes / 2);
-                    bCtx.scale(0.45, 0.45); // Scale fits inside glass
+                    bCtx.scale(0.75, 0.75); // Expanded Scale (Fill the Glass)
                     bCtx.translate(-gridRes / 2, -gridRes / 2);
 
                     bCtx.fillStyle = '#FFFFFF';
@@ -437,8 +437,8 @@
                     const cy = gridRes * 0.48;
 
                     // --- EYES (STATIC PILLS + MOVING PUPILS) ---
-                    const eyeW = 22; const eyeH = 28; const eyeGap = 28;
-                    const pupilSize = 6;
+                    const eyeW = 24; const eyeH = 32; const eyeGap = 40; // Widened Eyes
+                    const pupilSize = 8;
 
                     // Left Eye Container (Static)
                     bCtx.beginPath();
@@ -514,11 +514,11 @@
                                 const screenY = y * dotSpacing + (dotSpacing / 2);
 
                                 // Draw Backing (Black)
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.2, 0, Math.PI * 2); ctx.fillStyle = '#000000'; ctx.fill();
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.3, 0, Math.PI * 2); ctx.fillStyle = '#000000'; ctx.fill();
                                 // Draw Glow (Cyan)
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius, 0, Math.PI * 2); ctx.fillStyle = '#00ffff'; ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 6; ctx.fill();
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.1, 0, Math.PI * 2); ctx.fillStyle = '#00ffff'; ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 4; ctx.fill();
                                 // Draw Core (White)
-                                ctx.beginPath(); ctx.shadowBlur = 0; ctx.arc(screenX, screenY, dotRadius * 0.6, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
+                                ctx.beginPath(); ctx.shadowBlur = 0; ctx.arc(screenX, screenY, dotRadius * 0.7, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
                             }
                         }
                     }
