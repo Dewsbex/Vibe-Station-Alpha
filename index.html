@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.9-NEON-SOLID</div>
+        <div>v124.0-FINAL-GLOW</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -448,11 +448,11 @@
                 const animate = () => {
                     requestAnimationFrame(animate);
                     if (isOffScreen) {
-                        targetSmile = -0.5; // Deep banana frown
+                        targetSmile = -0.3; // Gentle persistent smile/neutral
                     } else {
                         const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-                        if (dist < 0.6) targetSmile = 1.0;
-                        else targetSmile = -0.2; // Curve down slightly when looking away
+                        if (dist < 0.65) targetSmile = 1.0;
+                        else targetSmile = 0.2;
                     }
 
                     // SMOOTH TRANSITION (v123.9)
@@ -481,10 +481,10 @@
                     const ratio = gridRes / logicalRes;
                     bCtx.scale(ratio, ratio);
                     bCtx.translate(logicalRes / 2, logicalRes / 2);
-                    bCtx.scale(0.85, 0.85); // Matches reference visor fit
+                    bCtx.scale(0.85, 0.85);
                     bCtx.translate(-logicalRes / 2, -logicalRes / 2);
                     bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
-                    const cx = logicalRes / 2, cy = logicalRes * 0.45; // Raised face
+                    const cx = logicalRes / 2, cy = logicalRes * 0.48; // Face moved down for v124.0
 
                     const eyeW = 32, eyeH = 44, eyeGap = 45, pupilSize = 11;
                     [-1, 1].forEach(side => {
@@ -506,18 +506,20 @@
                         bCtx.restore();
                     });
 
-                    // --- DYNAMIC BANANA MOUTH (v123.9) ---
-                    const mouthY = cy + 54, mouthW = 46;
-                    const curviness = smileFactor * 42; // Deep Positive (Smile) or Deep Negative (Frown)
-                    const thickness = 28; // Dynamic thickness based on curvy vs flat? No, solid 28 as per ref.
-
-                    bCtx.beginPath();
-                    bCtx.moveTo(cx - mouthW, mouthY);
-                    // Upper boundary of banana
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY);
-                    // Lower boundary (thicker)
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness + thickness, cx - mouthW, mouthY);
-                    bCtx.fill();
+                    // --- MOUTH RESTORATION & POSITIONING (v124.0) ---
+                    const mouthY = cy + 38, mouthW = 44, smileDepth = smileFactor * 26;
+                    bCtx.lineJoin = 'round';
+                    if (smileFactor > 0.15) {
+                        bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                        // Upper curve
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY);
+                        // Lower curve (for banana thickness)
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 20, cx - mouthW, mouthY);
+                        bCtx.fill();
+                    } else {
+                        bCtx.lineWidth = 10; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 22), cx + mouthW, mouthY); bCtx.stroke();
+                    }
                     bCtx.restore();
 
                     // --- FINAL COMPOSITE ---
