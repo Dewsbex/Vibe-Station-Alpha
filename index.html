@@ -137,10 +137,9 @@
             height: 100%;
             pointer-events: none;
             z-index: 10;
-            opacity: 0;
-            /* Default OFF state for Ignition Sequence */
-            transition: opacity 0.1s;
-            /* Fast flicker response */
+            opacity: 1;
+            /* ALWAYS ON - IGNITION REMOVED */
+            /* transition removed */
         }
 
         .glass-card:hover {
@@ -334,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v115.2-FORCE-RELAY</div>
+        <div>v115.3-ALWAYS-ON</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -400,23 +399,9 @@
                 const animate = () => {
                     requestAnimationFrame(animate);
 
-                    // --- IGNITION SEQUENCE LOGIC ---
-                    if (isOffScreen) {
-                        targetSmile = -1.0;
-                        // FADE OFF
-                        faceOpacity -= 0.05;
-                    } else {
-                        targetSmile = 0.5; // Mild smile by default when active
-                        // IGNITION ON
-                        if (faceOpacity < 1.0) {
-                            faceOpacity += 0.02;
-                            // Add flicker while warming up
-                            if (faceOpacity < 0.8 && Math.random() > 0.7) faceOpacity -= 0.1;
-                        }
-                    }
-                    // Clamp Opacity
-                    faceOpacity = Math.max(0, Math.min(1, faceOpacity));
-                    canvas.style.opacity = faceOpacity;
+                    // --- IGNITION REMOVED: ALWAYS ON ---
+                    targetSmile = 0.5;
+                    canvas.style.opacity = 1;
 
                     smileFactor += (targetSmile - smileFactor) * 0.15;
 
