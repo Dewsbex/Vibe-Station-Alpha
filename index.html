@@ -336,194 +336,176 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.0-FINAL-STABLE</div>
+        <div>v123.1-FIXED-RECON</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
-    window.addEventListener('load', () => {
-    console.log("VIBE-STATION-ALPHA v123.0-FINAL-STABLE PREPARING...");
-    const audioBtn = document.getElementById('audio-toggle');
-    let audioState = false, audioCtx, oscillator, gainNode;
+    <script>
+        window.addEventListener('load', () => {
+            console.log("VIBE-STATION-ALPHA v123.1 PREPARING...");
+            const audioBtn = document.getElementById('audio-toggle');
+            let audioState = false, audioCtx, oscillator, gainNode;
 
-    audioBtn.addEventListener('click', () => {
-    if (!audioState) {
-    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    oscillator = audioCtx.createOscillator(); gainNode = audioCtx.createGain();
-    oscillator.frequency.setValueAtTime(60, audioCtx.currentTime);
-    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
-    oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-    oscillator.start(); audioBtn.innerText = "OUTPUT: ACTIVE [HUM]"; audioBtn.style.color = "#00ff41"; audioState =
-    true;
-    } else { if (oscillator) oscillator.stop(); audioBtn.innerText = "OUTPUT: SILENT"; audioBtn.style.color = "#666";
-    audioState = false; }
-    });
+            audioBtn.addEventListener('click', () => {
+                if (!audioState) {
+                    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    oscillator = audioCtx.createOscillator(); gainNode = audioCtx.createGain();
+                    oscillator.frequency.setValueAtTime(60, audioCtx.currentTime);
+                    gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+                    oscillator.start(); audioBtn.innerText = "OUTPUT: ACTIVE [HUM]"; audioBtn.style.color = "#00ff41"; audioState =
+                        true;
+                } else {
+                    if (oscillator) oscillator.stop(); audioBtn.innerText = "OUTPUT: SILENT"; audioBtn.style.color = "#666";
+                    audioState = false;
+                }
+            });
 
-    let mouseX = 0, mouseY = 0;
-    const updateLook = (x, y) => {
-    mouseX = (x / window.innerWidth) * 2 - 1;
-    mouseY = -(y / window.innerHeight) * 2 + 1;
-    isOffScreen = false; // FORCE ON PRESENCE
-    };
-    document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
-    document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive:
-    true });
-
-    // STATE TRACKING FOR IGNITION SEQUENCE
-    let isOffScreen = true; // Start OFF
-    document.addEventListener('mouseout', (e) => {
-    if (!e.relatedTarget && !e.toElement) isOffScreen = true;
-    });
-    document.addEventListener('mouseover', () => { isOffScreen = false; });
-
-    const canvas = document.getElementById('face-overlay');
-    const container = document.getElementById('robot-container');
-
-    if (canvas && container) {
-    const ctx = canvas.getContext('2d');
-    const bufferCanvas = document.createElement('canvas'); // Shapes
-    const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
-    const gridRes = 640;
-    const logicalRes = 256;
-
-    bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
-    patternCanvas.width = gridRes; patternCanvas.height = gridRes;
-
-    const bCtx = bufferCanvas.getContext('2d');
-    const pCtx = patternCanvas.getContext('2d');
-
-    // --- HIGH-DPI INIT & RESIZE ---
-    const init = () => {
-    const rect = canvas.getBoundingClientRect(); // FIX: Use canvas rect, not container
-    const dpr = window.devicePixelRatio || 1;
-
-    if (rect.width === 0) return; // Wait for layout
-
-    // Match physical pixels
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-
-    // Update Pattern Canvas to match Screen Pixels 1:1
-    patternCanvas.width = canvas.width;
-    patternCanvas.height = canvas.height;
-
-    const pCtx = patternCanvas.getContext('2d');
-    pCtx.setTransform(1, 0, 0, 1, 0, 0);
-    pCtx.scale(dpr, dpr);
-
-    // RENDER PATTERN DYNAMICALLY
-    pCtx.clearRect(0, 0, rect.width, rect.height);
-
-    const dotSize = 4;
-    const radius = (dotSize / 2) * 1.25;
-
-    for (let y = 0; y < rect.height; y+=dotSize) { for (let x=0; x < rect.width; x+=dotSize) { const cx=x + dotSize/2;
-        const cy=y + dotSize/2; pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
-        pCtx.fillStyle='#000000' ; pCtx.fill(); pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.0, 0, Math.PI * 2);
-        pCtx.fillStyle='#00ffff' ; pCtx.fill(); pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
-        pCtx.fillStyle='#ffffff' ; pCtx.fill(); } } ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(dpr, dpr);
-        console.log("Face Initialized:", rect.width, "x" , rect.height, "@" , dpr, "x" ); };
-        window.addEventListener('resize', init); init(); // Call immediately // Also call after a short delay to handle
-        late layout shifts setTimeout(init, 100); let smileFactor=0; let targetSmile=0; // Separate Physics variables
-        for True Vergence let leftPupil={ x: 0, y: 0, velX: 0, velY: 0 }; let rightPupil={ x: 0, y: 0, velX: 0, velY: 0
-        }; // IGNITION VARIABLES let faceOpacity=0; let flickerCounter=0; const animate=()=> {
-        requestAnimationFrame(animate);
-
-        // --- EXPRESSION LOGIC ---
-        if (isOffScreen) {
-        targetSmile = -0.5; // Slight frown when ignored
-        } else {
-        // Calculate distance from center (0-1)
-        const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-        if (dist < 0.5) targetSmile=1.0; // Big Smile in center else targetSmile=0.2; // Neutral/Focused elsewhere }
-            canvas.style.opacity=1; smileFactor +=(targetSmile - smileFactor) * 0.15; // --- TRUE VERGENCE LOGIC --- //
-            Calculate independent targets for each eye based on geometry // Eye Centers (Logical): Left=-34, Right=+34
-            (Approx relative to center 0) // We emulate 3D focusing: When mouseX is 0, eyes look inward. const
-            eyeSeparation=0.5; // Normalized screen distance between eyes // Left Eye Target (Mouse is relative to
-            screen center) // If Mouse=0, Target=0 - (-0.5)=+0.5 (Look Right) const targetLeftX=(mouseX + eyeSeparation)
-            * pupilRange; const targetRightX=(mouseX - eyeSeparation) * pupilRange; // Clamp targets to reasonable
-            ranges const clampedLeftX=Math.max(-pupilRange * 1.2, Math.min(pupilRange * 1.2, targetLeftX)); const
-            clampedRightX=Math.max(-pupilRange * 1.2, Math.min(pupilRange * 1.2, targetRightX)); const
-            targetY=Math.max(-1, Math.min(1, -mouseY)) * pupilRange; // Physics Constants (Reference) const acc=0.2;
-            const drag=0.7; // Update Left Eye leftPupil.velX +=(clampedLeftX - leftPupil.x) * acc; leftPupil.velY
-            +=(targetY - leftPupil.y) * acc; leftPupil.velX *=drag; leftPupil.velY *=drag; leftPupil.x +=leftPupil.velX;
-            leftPupil.y +=leftPupil.velY; // Update Right Eye rightPupil.velX +=(clampedRightX - rightPupil.x) * acc;
-            rightPupil.velY +=(targetY - rightPupil.y) * acc; rightPupil.velX *=drag; rightPupil.velY *=drag;
-            rightPupil.x +=rightPupil.velX; rightPupil.y +=rightPupil.velY; // --- DRAW TO BUFFER --- bCtx.clearRect(0,
-            0, gridRes, gridRes); bCtx.save(); // SCALE TO HYPER-RES const ratio=gridRes / logicalRes; bCtx.scale(ratio,
-            ratio); // CENTER ON LOGICAL GRID bCtx.translate(logicalRes / 2, logicalRes / 2); bCtx.scale(0.75, 0.75); //
-            Expanded Scale (Fill the Glass) bCtx.translate(-logicalRes / 2, -logicalRes / 2); bCtx.fillStyle='#FFFFFF' ;
-            bCtx.strokeStyle='#FFFFFF' ; bCtx.lineCap='round' ; const cx=logicalRes / 2; const cy=logicalRes * 0.48; //
-            --- EYES (STATIC PILLS + MOVING PUPILS) --- const eyeW=24; const eyeH=32; const eyeGap=34; /* MOVED CLOSER
-            (was 40) */ const pupilSize=8; // Left Eye Container (Static) bCtx.beginPath(); bCtx.ellipse(cx - eyeGap,
-            cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill(); // Left Pupil
-            bCtx.globalCompositeOperation='destination-out' ; bCtx.beginPath(); bCtx.arc(cx - eyeGap + leftPupil.x, cy +
-            leftPupil.y, pupilSize, 0, Math.PI * 2); bCtx.fill(); bCtx.globalCompositeOperation='source-over' ; // Right
-            Eye Container (Static) bCtx.beginPath(); bCtx.ellipse(cx + eyeGap, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI *
-            2); bCtx.fill(); // Right Pupil bCtx.globalCompositeOperation='destination-out' ; bCtx.beginPath();
-            bCtx.arc(cx + eyeGap + rightPupil.x, cy + rightPupil.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
-            bCtx.globalCompositeOperation='source-over' ; // --- BROWS (AMPLIFIED MOVEMENT) --- // Range increased for
-            visibility const browOffset=Math.max(-5, Math.min(5, leftPupil.y * 0.8)); const browY=cy - 22 + browOffset;
-            /* LOWERED SIGNIFICANTLY (was -32) */ const browW=24; const browAngle=smileFactor * 0.4; // Stronger tilt
-            (was 0.2) bCtx.lineWidth=5; // Left Brow bCtx.save(); bCtx.translate(cx - eyeGap, browY);
-            bCtx.rotate(-browAngle); bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW /
-            2, 4); bCtx.stroke(); bCtx.restore(); // Right Brow bCtx.save(); bCtx.translate(cx + eyeGap, browY);
-            bCtx.rotate(browAngle); bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW /
-            2, 4); bCtx.stroke(); bCtx.restore(); // --- MOUTH (LOWERED POSITION) --- const mouthY=cy + 42; /* MOVED
-            DOWN (was 28) */ const mouthW=32; const smileDepth=smileFactor * 18; const skewY=(smileFactor> 0) ? -8 *
-            smileFactor : 0;
-
-            if (smileFactor > 0.1) {
-            bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-            bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
-            bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 10, cx - mouthW, mouthY);
-            bCtx.fill();
-            bCtx.lineWidth = 4; bCtx.beginPath(); bCtx.moveTo(cx + mouthW - 2, mouthY + skewY + 2); bCtx.lineTo(cx +
-            mouthW + 4, mouthY + skewY - 4); bCtx.stroke();
-            } else {
-            bCtx.lineWidth = 5; bCtx.beginPath();
-            const controlY = mouthY + (smileFactor * 16);
-            bCtx.moveTo(cx - mouthW, mouthY); bCtx.quadraticCurveTo(cx, controlY, cx + mouthW, mouthY); bCtx.stroke();
-            }
-            bCtx.restore();
-
-            // --- COMPOSITE RENDER (RETINA) ---
-            const rect = canvas.getBoundingClientRect();
-            if (rect.width === 0 || rect.height === 0) return;
-            if (patternCanvas.width === 0 && rect.width > 0) init();
-
-            ctx.clearRect(0, 0, rect.width, rect.height);
-            ctx.save();
-
-            // Buffer (640) to logical screen width (rect.width)
-            const s = rect.width / gridRes;
-            ctx.scale(s, s);
-            ctx.drawImage(bufferCanvas, 0, 0);
-            ctx.restore();
-
-            ctx.globalCompositeOperation = 'source-in';
-            ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
-            ctx.globalCompositeOperation = 'source-over';
+            let mouseX = 0, mouseY = 0;
+            const updateLook = (x, y) => {
+                mouseX = (x / window.innerWidth) * 2 - 1;
+                mouseY = -(y / window.innerHeight) * 2 + 1;
+                isOffScreen = false; // FORCE ON PRESENCE
             };
-            animate();
+            document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), {
+                passive:
+                    true
+            });
+
+            // STATE TRACKING FOR IGNITION SEQUENCE
+            let isOffScreen = true; // Start OFF
+            document.addEventListener('mouseout', (e) => {
+                if (!e.relatedTarget && !e.toElement) isOffScreen = true;
+            });
+            document.addEventListener('mouseover', () => { isOffScreen = false; });
+
+            const canvas = document.getElementById('face-overlay');
+            const container = document.getElementById('robot-container');
+
+            if (canvas && container) {
+                const ctx = canvas.getContext('2d');
+                const bufferCanvas = document.createElement('canvas'); // Shapes
+                const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
+                const gridRes = 640;
+                const logicalRes = 256;
+
+                bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
+                patternCanvas.width = gridRes; patternCanvas.height = gridRes;
+
+                const bCtx = bufferCanvas.getContext('2d');
+                const pCtx = patternCanvas.getContext('2d');
+
+                // --- HIGH-DPI INIT & RESIZE ---
+                const init = () => {
+                    const rect = canvas.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
+                    if (rect.width === 0) return;
+
+                    canvas.width = rect.width * dpr;
+                    canvas.height = rect.height * dpr;
+                    patternCanvas.width = canvas.width;
+                    patternCanvas.height = canvas.height;
+
+                    const pCtx = patternCanvas.getContext('2d');
+                    pCtx.setTransform(1, 0, 0, 1, 0, 0);
+                    pCtx.scale(dpr, dpr);
+                    pCtx.clearRect(0, 0, rect.width, rect.height);
+
+                    const dotSize = 4;
+                    const radius = (dotSize / 2) * 1.25;
+                    for (let y = 0; y < rect.height; y += dotSize) {
+                        for (let x = 0; x < rect.width; x += dotSize) {
+                            const cx = x + dotSize /
+                                2; const cy = y + dotSize / 2; pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#000000'; pCtx.fill(); pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.0, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#00ffff'; pCtx.fill(); pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#ffffff'; pCtx.fill();
+                        }
+                    } ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.scale(dpr, dpr);
+                };
+                window.addEventListener('resize', init); init(); setTimeout(init, 100); let smileFactor = 0; let targetSmile = 0;
+                let leftPupil = { x: 0, y: 0, velX: 0, velY: 0 }; let rightPupil = { x: 0, y: 0, velX: 0, velY: 0 }; const
+                    animate = () => {
+                        requestAnimationFrame(animate);
+                        if (isOffScreen) {
+                            targetSmile = -0.5;
+                        } else {
+                            const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+                            if (dist < 0.5) targetSmile = 1.0; else targetSmile = 0.2;
+                        } canvas.style.opacity = 1; smileFactor += (targetSmile -
+                            smileFactor) * 0.15; const pupilRange = 8; const eyeSeparation = 0.5; const targetLeftX = (mouseX + eyeSeparation)
+                                * pupilRange; const targetRightX = (mouseX - eyeSeparation) * pupilRange; const targetY = Math.max(-1,
+                                    Math.min(1, -mouseY)) * pupilRange; const acc = 0.2, drag = 0.7; leftPupil.velX += (targetLeftX - leftPupil.x) *
+                                        acc; leftPupil.velY += (targetY - leftPupil.y) * acc; leftPupil.velX *= drag; leftPupil.velY *= drag;
+                        leftPupil.x += leftPupil.velX; leftPupil.y += leftPupil.velY; rightPupil.velX += (targetRightX - rightPupil.x)
+                            * acc; rightPupil.velY += (targetY - rightPupil.y) * acc; rightPupil.velX *= drag; rightPupil.velY *= drag;
+                        rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY; bCtx.clearRect(0, 0, gridRes, gridRes);
+                        bCtx.save(); const ratio = gridRes / logicalRes; bCtx.scale(ratio, ratio); bCtx.translate(logicalRes / 2,
+                            logicalRes / 2); bCtx.scale(0.75, 0.75); bCtx.translate(-logicalRes / 2, -logicalRes / 2);
+                        bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round'; const cx = logicalRes / 2,
+                            cy = logicalRes * 0.48; const eyeW = 24, eyeH = 32, eyeGap = 34, pupilSize = 8;[-1, 1].forEach(side => {
+                                const eyeCx = cx + eyeGap * side;
+                                const p = side === -1 ? leftPupil : rightPupil;
+                                bCtx.beginPath(); bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill();
+                                bCtx.globalCompositeOperation = 'destination-out';
+                                bCtx.beginPath(); bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
+                                bCtx.globalCompositeOperation = 'source-over';
+                            });
+
+                        const browOffset = Math.max(-5, Math.min(5, leftPupil.y * 0.8));
+                        const browY = cy - 22 + browOffset;
+                        const browW = 24, browAngle = smileFactor * 0.4;
+                        bCtx.lineWidth = 5;
+                        [-1, 1].forEach(side => {
+                            bCtx.save(); bCtx.translate(cx + eyeGap * side, browY); bCtx.rotate(browAngle * side);
+                            bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
+                            bCtx.restore();
+                        });
+
+                        const mouthY = cy + 42, mouthW = 32, smileDepth = smileFactor * 18, skewY = (smileFactor > 0) ? -8 *
+                            smileFactor : 0;
+                        if (smileFactor > 0.1) {
+                            bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                            bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
+                            bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 10, cx - mouthW, mouthY); bCtx.fill();
+                        } else {
+                            bCtx.lineWidth = 5; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                            bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 16), cx + mouthW, mouthY); bCtx.stroke();
+                        }
+                        bCtx.restore();
+
+                        const rect = canvas.getBoundingClientRect();
+                        if (rect.width === 0) return;
+                        if (patternCanvas.width === 0) init();
+
+                        ctx.clearRect(0, 0, rect.width, rect.height);
+                        ctx.save();
+                        ctx.scale(rect.width / gridRes, rect.width / gridRes);
+                        ctx.drawImage(bufferCanvas, 0, 0);
+                        ctx.restore();
+                        ctx.globalCompositeOperation = 'source-in';
+                        ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
+                        ctx.globalCompositeOperation = 'source-over';
+                    };
+                animate();
             }
 
-            // UPLINK UI
-            const createUplinkUI = (card, targetUrl) => {
-            card.style.cursor = 'pointer';
-            card.onclick = () => window.open(targetUrl, '_blank');
-            card.setAttribute('title', 'Click to Launch');
+            const createUplinkUI = (card, url) => {
+                card.style.cursor = 'pointer'; card.onclick = () => window.open(url, '_blank'); card.setAttribute('title',
+                    'Launch');
             };
-            const cardBot = document.getElementById('knowledge-card');
-            if (cardBot) createUplinkUI(cardBot, 'https://socratic-orb.onrender.com/');
+            const orbCard = document.getElementById('knowledge-card');
+            if (orbCard) createUplinkUI(orbCard, 'https://socratic-orb.onrender.com/');
             document.querySelectorAll('.glass-card').forEach(card => {
-            if (card.innerText.includes('The Social ETL')) createUplinkUI(card,
-            'https://social-etl-scheduler.onrender.com/');
+                if (card.innerText.includes('The Social ETL')) createUplinkUI(card,
+                    'https://social-etl-scheduler.onrender.com/');
             });
-            });
-            </script>
-            <iframe src="https://socratic-orb.onrender.com/"
-                style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
-            <iframe src="https://social-etl-scheduler.onrender.com/"
-                style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
+        });
+    </script>
+    <iframe src="https://socratic-orb.onrender.com/"
+        style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
+    <iframe src="https://social-etl-scheduler.onrender.com/"
+        style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
 </body>
 
 </html>
