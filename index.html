@@ -357,6 +357,7 @@
             const updateLook = (x, y) => {
                 mouseX = (x / window.innerWidth) * 2 - 1;
                 mouseY = -(y / window.innerHeight) * 2 + 1;
+                isOffScreen = false; // FORCE ON PRESENCE
             };
             document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
             document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
