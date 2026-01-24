@@ -62,27 +62,7 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        .visual-stage {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            background-color: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            background-size: cover;
-            background-position: center;
-            /* filter: grayscale(100%); REMOVED FOR COLOR POP */
-            transition: 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .glass-card:hover .visual-stage {
-            filter: grayscale(0%);
-        }
+        /* REPLACED BY SPOTLIGHT ENGINE */
 
         .glass-card:hover {
             transform: translateY(-6px);
@@ -143,44 +123,79 @@
             margin-top: 24px;
         }
 
-        .stage-social {
-            background-image: url('logistics_pop_v1.png');
-        }
-
-        .stage-visit {
-            background-image: url('curation_pop_v1.png');
-        }
-
-        .stage-dial {
-            background-image: url('decision_pop_v1.png');
-        }
-
-        /* THE SOCRATIC ORB STAGE */
-        .stage-robot {
-            background-color: #1a1a1a;
+        /* SPOTLIGHT ENGINE v1: Dual-Layer Masking */
+        .visual-stage {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.6);
             position: relative;
             overflow: hidden;
+            /* Base container holds the structure, images are in pseudos */
         }
 
-        /* BACKGROUND LAYER (ROBOT BODY) - GRAYSCALE TO COLOR */
-        .stage-robot::before {
+        /* LAYER 1: GRAYSCALE BACKGROUND (ALWAYS VISIBLE) */
+        .visual-stage::before {
             content: "";
             position: absolute;
             inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%);
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* LAYER 2: COLOR SPOTLIGHT (MASKED) */
+        .visual-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(0%);
+            z-index: 2;
+            /* THE SPOTLIGHT: 35% Circle at Center */
+            clip-path: circle(35% at center);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* HOVER INTERACTION: EXPAND COLOR */
+        .glass-card:hover .visual-stage::after {
+            clip-path: circle(120% at center);
+        }
+
+        /* INDIVIDUAL ASSETS (Applied to both layers) */
+        .stage-social::before,
+        .stage-social::after {
+            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-visit::before,
+        .stage-visit::after {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-dial::before,
+        .stage-dial::after {
+            background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
+        }
+
+        /* SOCRATIC ORB: SPECIAL HANDLING */
+        .stage-robot {
+            background-color: #1a1a1a;
+        }
+
+        .stage-robot::before,
+        .stage-robot::after {
             background-image: url('Trim Bot Dark Avenger.png?v=112');
             background-size: contain;
             background-repeat: no-repeat;
-            background-position: center center;
-            filter: grayscale(100%);
-            transition: filter 0.5s ease;
-            z-index: 1;
         }
 
-        /* HOVER STATE: RESTORE ROBOT COLOR */
-        #knowledge-card:hover .stage-robot::before {
-            filter: grayscale(0%);
-        }
-
+        /* FACE OVERLAY: ALWAYS TOP */
         #face-overlay {
             position: absolute;
             top: 0;
@@ -188,8 +203,7 @@
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 2;
-            /* Sits on top of the background */
+            z-index: 10;
         }
 
         /* REFACTORED FOR COLOR POP: GLOBAL GRAYSCALE REMOVED */
@@ -333,7 +347,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v113.0-COLOR-POP</div>
+        <div>v114.0-SPOTLIGHT-MASK</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
