@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v119.0-TUNED-ALLOY</div>
+        <div>v120.0-INSTANT-REFLEX</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -419,11 +419,14 @@
                     const targetX = Math.max(-1, Math.min(1, mouseX)) * pupilRange;
                     const targetY = Math.max(-1, Math.min(1, -mouseY)) * pupilRange;
 
-                    /* INCREASED SPEED: 0.25 (was 0.1) */
-                    pupilVelX += (targetX - pupilPosX) * 0.25;
-                    pupilVelY += (targetY - pupilPosY) * 0.25;
-                    pupilVelX *= 0.8; pupilVelY *= 0.8;
-                    pupilPosX += pupilVelX; pupilPosY += pupilVelY;
+                    /* INSTANT RESPONSE: 1:1 DIRECT MAPPING WITH CONVERGENCE */
+                    // Add convergence when looking near center (mouseX close to 0)
+                    // Max convergence when mouseX is 0. Fade out as it moves away.
+                    const convergence = 4.0 * (1 - Math.abs(mouseX));
+                    const pLeftX = targetX + Math.max(0, convergence);
+                    const pRightX = targetX - Math.max(0, convergence);
+
+                    pupilPosY = targetY;
 
                     // --- DRAW TO BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
@@ -456,7 +459,7 @@
                     // Left Pupil (Moving Negative Space)
                     bCtx.globalCompositeOperation = 'destination-out';
                     bCtx.beginPath();
-                    bCtx.arc(cx - eyeGap + pupilPosX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
+                    bCtx.arc(cx - eyeGap + pLeftX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
                     bCtx.fill();
                     bCtx.globalCompositeOperation = 'source-over';
 
@@ -467,14 +470,14 @@
                     // Right Pupil
                     bCtx.globalCompositeOperation = 'destination-out';
                     bCtx.beginPath();
-                    bCtx.arc(cx + eyeGap + pupilPosX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
+                    bCtx.arc(cx + eyeGap + pRightX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
                     bCtx.fill();
                     bCtx.globalCompositeOperation = 'source-over';
 
                     // --- BROWS (AMPLIFIED MOVEMENT) ---
                     // Range increased for visibility
                     const browOffset = Math.max(-5, Math.min(5, pupilPosY * 0.8));
-                    const browY = cy - 22 + browOffset;
+                    const browY = cy - 38 + browOffset; /* LIFTED HIGHER (was -30) */
                     const browW = 24;
                     const browAngle = smileFactor * 0.4; // Stronger tilt (was 0.2)
 
