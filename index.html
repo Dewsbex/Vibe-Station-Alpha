@@ -419,14 +419,20 @@
                     const targetX = Math.max(-1, Math.min(1, mouseX)) * pupilRange;
                     const targetY = Math.max(-1, Math.min(1, -mouseY)) * pupilRange;
 
-                    /* INSTANT RESPONSE: 1:1 DIRECT MAPPING WITH CONVERGENCE */
-                    // Add convergence when looking near center (mouseX close to 0)
+                    /* PHYSICS-BASED TRACKING (Reference Model) */
+                    // Acceleration: 0.2, Damping: 0.7
+                    pupilVelX += (targetX - pupilPosX) * 0.2;
+                    pupilVelY += (targetY - pupilPosY) * 0.2;
+                    pupilVelX *= 0.7;
+                    pupilVelY *= 0.7;
+                    pupilPosX += pupilVelX;
+                    pupilPosY += pupilVelY;
+
+                    // CONVERGENCE LOGIC (Applied to tracked position)
                     // Max convergence when mouseX is 0. Fade out as it moves away.
                     const convergence = 4.0 * (1 - Math.abs(mouseX));
-                    const pLeftX = targetX + Math.max(0, convergence);
-                    const pRightX = targetX - Math.max(0, convergence);
-
-                    pupilPosY = targetY;
+                    const pLeftX = pupilPosX + Math.max(0, convergence);
+                    const pRightX = pupilPosX - Math.max(0, convergence);
 
                     // --- DRAW TO BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
