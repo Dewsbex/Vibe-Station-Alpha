@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.8-SOLID-GLOW</div>
+        <div>v123.9-NEON-SOLID</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -413,9 +413,9 @@
                     pCtx.scale(dpr, dpr);
                     pCtx.clearRect(0, 0, rect.width, rect.height);
 
-                    // Grid-1000 ULTRA-DENSE SOLID Matrix
+                    // Grid-1000 NEON-SOLID Matrix
                     const dotSize = rect.width / 1000;
-                    const radius = (dotSize / 2) * 1.55; // 1.55x overlap for solidity
+                    const radius = (dotSize / 2) * 1.6; // 1.6x OVERLAP for total solidity
 
                     for (let y = 0; y < rect.height; y += dotSize) {
                         for (let x = 0; x < rect.width; x += dotSize) {
@@ -423,10 +423,11 @@
                             const cy = y + dotSize / 2;
                             pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
                             pCtx.fillStyle = '#000000'; pCtx.fill();
-                            // SOLID COLOR CORES (v123.8 Ultra-Brightness)
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.95, 0, Math.PI * 2);
+
+                            // NEON SOLID CORE (v123.9 Max Luminance)
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.98, 0, Math.PI * 2);
                             pCtx.fillStyle = '#00ffff'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
                         }
                     }
@@ -447,15 +448,15 @@
                 const animate = () => {
                     requestAnimationFrame(animate);
                     if (isOffScreen) {
-                        targetSmile = -0.3; // Slight frown/unhappy
+                        targetSmile = -0.5; // Deep banana frown
                     } else {
                         const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
                         if (dist < 0.6) targetSmile = 1.0;
-                        else targetSmile = 0.2;
+                        else targetSmile = -0.2; // Curve down slightly when looking away
                     }
 
-                    // EXPRESSION PHYSICS (RESTORED)
-                    smileFactor += (targetSmile - smileFactor) * 0.1;
+                    // SMOOTH TRANSITION (v123.9)
+                    smileFactor += (targetSmile - smileFactor) * 0.12;
 
                     canvas.style.opacity = 1;
                     const pupilRange = 10;
@@ -480,13 +481,12 @@
                     const ratio = gridRes / logicalRes;
                     bCtx.scale(ratio, ratio);
                     bCtx.translate(logicalRes / 2, logicalRes / 2);
-                    bCtx.scale(0.75, 0.75);
+                    bCtx.scale(0.85, 0.85); // Matches reference visor fit
                     bCtx.translate(-logicalRes / 2, -logicalRes / 2);
                     bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
-                    const cx = logicalRes / 2, cy = logicalRes * 0.48;
+                    const cx = logicalRes / 2, cy = logicalRes * 0.45; // Raised face
 
-                    // Constants scaled for 320 grid (x1.25)
-                    const eyeW = 30, eyeH = 40, eyeGap = 42.5, pupilSize = 10;
+                    const eyeW = 32, eyeH = 44, eyeGap = 45, pupilSize = 11;
                     [-1, 1].forEach(side => {
                         const eyeCx = cx + eyeGap * side;
                         const p = side === -1 ? leftPupil : rightPupil;
@@ -497,29 +497,27 @@
                     });
 
                     const browOffset = Math.max(-6, Math.min(6, leftPupil.y * 0.8));
-                    const browY = cy - 28 + browOffset;
-                    const browW = 30, browAngle = smileFactor * 0.4;
-                    bCtx.lineWidth = 6;
+                    const browY = cy - 32 + browOffset;
+                    const browW = 32, browAngle = smileFactor * 0.45;
+                    bCtx.lineWidth = 7;
                     [-1, 1].forEach(side => {
                         bCtx.save(); bCtx.translate(cx + eyeGap * side, browY); bCtx.rotate(browAngle * side);
-                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 5); bCtx.quadraticCurveTo(0, -7, browW / 2, 5); bCtx.stroke();
+                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 5); bCtx.quadraticCurveTo(0, -8, browW / 2, 5); bCtx.stroke();
                         bCtx.restore();
                     });
 
-                    // --- THICK BANANA MOUTH (v123.8 RE-ENGINEERED) ---
-                    const mouthY = cy + 42, mouthW = 42, smileDepth = 5 + smileFactor * 32;
-                    bCtx.lineJoin = 'round';
-                    if (smileFactor > 0.1) {
-                        bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        // Curved upper and MUCH deeper lower for thickness
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 22, cx - mouthW, mouthY);
-                        bCtx.fill();
-                    } else {
-                        // Thicker neutral line
-                        bCtx.lineWidth = 10; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 25), cx + mouthW, mouthY); bCtx.stroke();
-                    }
+                    // --- DYNAMIC BANANA MOUTH (v123.9) ---
+                    const mouthY = cy + 54, mouthW = 46;
+                    const curviness = smileFactor * 42; // Deep Positive (Smile) or Deep Negative (Frown)
+                    const thickness = 28; // Dynamic thickness based on curvy vs flat? No, solid 28 as per ref.
+
+                    bCtx.beginPath();
+                    bCtx.moveTo(cx - mouthW, mouthY);
+                    // Upper boundary of banana
+                    bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY);
+                    // Lower boundary (thicker)
+                    bCtx.quadraticCurveTo(cx, mouthY + curviness + thickness, cx - mouthW, mouthY);
+                    bCtx.fill();
                     bCtx.restore();
 
                     // --- FINAL COMPOSITE ---
