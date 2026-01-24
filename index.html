@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v117.0-ULTRA-RES-EXPANDED</div>
+        <div>v118.0-HYPER-RES</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -374,7 +374,8 @@
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
                 const bufferCanvas = document.createElement('canvas');
-                const gridRes = 256; /* ULTRA-RES UPGRADE */
+                const gridRes = 640; /* HYPER-RES RETINA UPGRADE */
+                const logicalRes = 256; /* Base coordinate system for consistent positioning */
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 const bCtx = bufferCanvas.getContext('2d');
 
@@ -425,16 +426,22 @@
                     // --- DRAW TO BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
                     bCtx.save();
-                    bCtx.translate(gridRes / 2, gridRes / 2);
+
+                    // SCALE TO HYPER-RES
+                    const ratio = gridRes / logicalRes;
+                    bCtx.scale(ratio, ratio);
+
+                    // CENTER ON LOGICAL GRID
+                    bCtx.translate(logicalRes / 2, logicalRes / 2);
                     bCtx.scale(0.75, 0.75); // Expanded Scale (Fill the Glass)
-                    bCtx.translate(-gridRes / 2, -gridRes / 2);
+                    bCtx.translate(-logicalRes / 2, -logicalRes / 2);
 
                     bCtx.fillStyle = '#FFFFFF';
                     bCtx.strokeStyle = '#FFFFFF';
                     bCtx.lineCap = 'round';
 
-                    const cx = gridRes / 2;
-                    const cy = gridRes * 0.48;
+                    const cx = logicalRes / 2;
+                    const cy = logicalRes * 0.48;
 
                     // --- EYES (STATIC PILLS + MOVING PUPILS) ---
                     const eyeW = 24; const eyeH = 32; const eyeGap = 40; // Widened Eyes
@@ -481,10 +488,11 @@
                     bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
                     bCtx.restore();
 
-                    // --- MOUTH (AMPLIFIED CRESCENT) ---
-                    const mouthY = cy + 28; const mouthW = 32;
-                    const smileDepth = smileFactor * 18; // Deeper smile (was 14)
-                    const skewY = (smileFactor > 0) ? -8 * smileFactor : 0; // More tilt
+                    // --- MOUTH (LOWERED POSITION) ---
+                    const mouthY = cy + 42; /* MOVED DOWN (was 28) */
+                    const mouthW = 32;
+                    const smileDepth = smileFactor * 18;
+                    const skewY = (smileFactor > 0) ? -8 * smileFactor : 0;
 
                     if (smileFactor > 0.1) {
                         bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
