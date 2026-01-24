@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.2-SHARP-DPI</div>
+        <div>v123.3-ULTRA-RES</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -386,7 +386,7 @@
                 const ctx = canvas.getContext('2d');
                 const bufferCanvas = document.createElement('canvas'); // Shapes
                 const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
-                const gridRes = 640;
+                const gridRes = 1024; // UPGRADED from 640 for Ultra-DPI
                 const logicalRes = 256;
 
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
@@ -401,12 +401,13 @@
                     const dpr = window.devicePixelRatio || 1;
                     if (rect.width === 0) return;
 
-                    // Match physical pixels for razor sharpness
+                    // 1. Match physical pixels for the main display
                     canvas.width = rect.width * dpr;
                     canvas.height = rect.height * dpr;
+
+                    // 2. Prepare high-density dot pattern
                     patternCanvas.width = canvas.width;
                     patternCanvas.height = canvas.height;
-
                     const pCtx = patternCanvas.getContext('2d');
                     pCtx.setTransform(1, 0, 0, 1, 0, 0);
                     pCtx.scale(dpr, dpr);
@@ -426,8 +427,9 @@
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
                         }
                     }
+
+                    // 3. Reset main context to physical mapping
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
-                    ctx.scale(dpr, dpr);
                 };
 
                 window.addEventListener('resize', init);
@@ -490,17 +492,22 @@
                     }
                     bCtx.restore();
 
+                    // --- FINAL COMPOSITE ---
                     const rect = canvas.getBoundingClientRect();
                     if (rect.width === 0) return;
-                    if (patternCanvas.width === 0) init();
 
-                    ctx.clearRect(0, 0, rect.width, rect.height);
+                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                    // 1. Draw Shapes at physical scale to match screen pixels
                     ctx.save();
-                    ctx.scale(rect.width / gridRes, rect.width / gridRes);
+                    ctx.scale(canvas.width / gridRes, canvas.width / gridRes);
                     ctx.drawImage(bufferCanvas, 0, 0);
                     ctx.restore();
+
+                    // 2. Apply Pattern Mask at 1:1 physical resolution
                     ctx.globalCompositeOperation = 'source-in';
-                    ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
+                    ctx.drawImage(patternCanvas, 0, 0);
                     ctx.globalCompositeOperation = 'source-over';
                 };
                 animate();
