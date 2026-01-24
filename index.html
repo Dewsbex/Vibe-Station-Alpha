@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.6-ULTRA-DENSE</div>
+        <div>v123.7-VIVID-VFD</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -423,9 +423,10 @@
                             const cy = y + dotSize / 2;
                             pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
                             pCtx.fillStyle = '#000000'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.75, 0, Math.PI * 2);
+                            // BRIGHTER CORES (v123.7 Enhancement)
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
                             pCtx.fillStyle = '#00ffff'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.4, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
                         }
                     }
@@ -505,14 +506,18 @@
                         bCtx.restore();
                     });
 
-                    const mouthY = cy + 52.5, mouthW = 40, smileDepth = smileFactor * 22.5, skewY = (smileFactor > 0) ? -10 * smileFactor : 0;
+                    // --- BANANA MOUTH (v123.7 UPGRADE) ---
+                    const mouthY = cy + 55, mouthW = 55, smileDepth = 15 + smileFactor * 35;
+                    bCtx.lineJoin = 'round';
                     if (smileFactor > 0.1) {
                         bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 12.5, cx - mouthW, mouthY); bCtx.fill();
+                        // Deep curve for "Banana" shape
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 15, cx - mouthW, mouthY);
+                        bCtx.fill();
                     } else {
-                        bCtx.lineWidth = 6; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 20), cx + mouthW, mouthY); bCtx.stroke();
+                        bCtx.lineWidth = 7; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 25), cx + mouthW, mouthY); bCtx.stroke();
                     }
                     bCtx.restore();
 
