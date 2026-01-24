@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v121.0-PERF-CORE</div>
+        <div>v122.0-RETINA-VERGENCE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -384,41 +384,69 @@
                 const bCtx = bufferCanvas.getContext('2d');
                 const pCtx = patternCanvas.getContext('2d');
 
-                // PRE-RENDER DOT PATTERN (ONCE)
-                const renderPattern = () => {
-                    pCtx.clearRect(0, 0, gridRes, gridRes);
-                    const dotSpacing = gridRes / 64; // Relative spacing (approx 10px at 640)
-                    const dotRadius = (dotSpacing / 2) * 1.15;
+                // --- HIGH-DPI INIT & RESIZE ---
+                const init = () => {
+                    const rect = container.getBoundingClientRect();
+                    const dpr = window.devicePixelRatio || 1;
 
-                    for (let y = 0; y < gridRes; y += dotSpacing) {
-                        for (let x = 0; x < gridRes; x += dotSpacing) {
+                    // Match physical pixels
+                    canvas.width = rect.width * dpr;
+                    canvas.height = rect.height * dpr;
+
+                    // Match buffers to screen density for crisp interaction
+                    // Note: We keep buffer logical size fixed for consistent physics/drawing, 
+                    // but we could scale it. Sticking to fixed gridRes (640) for the shapes is fine,
+                    // but the PATTERN must match screen pixels exactly to avoid moire/blur.
+
+                    // Actually, to fix pixelation, we should render shapes at high res too.
+                    // But gridRes=640 is already quite high. The issue is likely the CSS vs Canvas scaling.
+
+                    // Update Pattern Canvas to match Screen Pixels 1:1
+                    patternCanvas.width = canvas.width;
+                    patternCanvas.height = canvas.height;
+
+                    const pCtx = patternCanvas.getContext('2d');
+                    pCtx.scale(dpr, dpr); // Scale context so we draw in logical pixels
+
+                    // RENDER PATTERN DYNAMICALLY
+                    pCtx.clearRect(0, 0, rect.width, rect.height);
+
+                    // Calculate dot size based on DENSITY
+                    const dotSize = 4; // Fixed logical size for dots (crisper)
+                    const radius = (dotSize / 2) * 1.2;
+
+                    for (let y = 0; y < rect.height; y += dotSize) {
+                        for (let x = 0; x < rect.width; x += dotSize) {
+                            const cx = x + dotSize / 2;
+                            const cy = y + dotSize / 2;
+
                             // Backing
-                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 1.3, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
                             pCtx.fillStyle = '#000000'; pCtx.fill();
                             // Glow
-                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 1.1, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.0, 0, Math.PI * 2);
                             pCtx.fillStyle = '#00ffff'; pCtx.fill();
                             // Core
-                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 0.7, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
                         }
                     }
-                };
-                renderPattern();
 
-                const resize = () => {
-                    const scale = 2;
-                    canvas.width = container.clientWidth * scale;
-                    canvas.height = container.clientHeight * scale;
-                    ctx.scale(scale, scale);
+                    // Reset Main CTX Scale to handle logical drawing
+                    // We want to draw standard 0..rect.width co-ords
+                    ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset
+                    ctx.scale(dpr, dpr);
                 };
-                window.addEventListener('resize', resize);
-                resize();
+
+                window.addEventListener('resize', init);
+                // Trigger init after a slight delay to ensure container layout is done
+                setTimeout(init, 50);
 
                 let smileFactor = 0;
                 let targetSmile = 0;
-                let pupilPosX = 0, pupilPosY = 0;
-                let pupilVelX = 0, pupilVelY = 0;
+                // Separate Physics variables for True Vergence
+                let leftPupil = { x: 0, y: 0, velX: 0, velY: 0 };
+                let rightPupil = { x: 0, y: 0, velX: 0, velY: 0 };
 
                 // IGNITION VARIABLES
                 let faceOpacity = 0;
@@ -441,25 +469,38 @@
 
                     smileFactor += (targetSmile - smileFactor) * 0.15;
 
-                    // PUPIL TRACKING (Moves INSIDE the static eye)
-                    const pupilRange = 8; /* INCREASED RANGE (was 4) */
-                    const targetX = Math.max(-1, Math.min(1, mouseX)) * pupilRange;
+                    // --- TRUE VERGENCE LOGIC ---
+                    // Calculate independent targets for each eye based on geometry
+                    // Eye Centers (Logical): Left = -34, Right = +34 (Approx relative to center 0)
+                    // We emulate 3D focusing: When mouseX is 0, eyes look inward.
+
+                    const eyeSeparation = 0.5; // Normalized screen distance between eyes
+
+                    // Left Eye Target (Mouse is relative to screen center)
+                    // If Mouse = 0, Target = 0 - (-0.5) = +0.5 (Look Right)
+                    const targetLeftX = (mouseX + eyeSeparation) * pupilRange;
+                    const targetRightX = (mouseX - eyeSeparation) * pupilRange;
+
+                    // Clamp targets to reasonable ranges
+                    const clampedLeftX = Math.max(-pupilRange * 1.2, Math.min(pupilRange * 1.2, targetLeftX));
+                    const clampedRightX = Math.max(-pupilRange * 1.2, Math.min(pupilRange * 1.2, targetRightX));
                     const targetY = Math.max(-1, Math.min(1, -mouseY)) * pupilRange;
 
-                    /* PHYSICS-BASED TRACKING (Reference Model) */
-                    // Acceleration: 0.2, Damping: 0.7
-                    pupilVelX += (targetX - pupilPosX) * 0.2;
-                    pupilVelY += (targetY - pupilPosY) * 0.2;
-                    pupilVelX *= 0.7;
-                    pupilVelY *= 0.7;
-                    pupilPosX += pupilVelX;
-                    pupilPosY += pupilVelY;
+                    // Physics Constants (Reference)
+                    const acc = 0.2;
+                    const drag = 0.7;
 
-                    // CONVERGENCE LOGIC (Applied to tracked position)
-                    // Max convergence when mouseX is 0. Fade out as it moves away.
-                    const convergence = 4.0 * (1 - Math.abs(mouseX));
-                    const pLeftX = pupilPosX + Math.max(0, convergence);
-                    const pRightX = pupilPosX - Math.max(0, convergence);
+                    // Update Left Eye
+                    leftPupil.velX += (clampedLeftX - leftPupil.x) * acc;
+                    leftPupil.velY += (targetY - leftPupil.y) * acc;
+                    leftPupil.velX *= drag; leftPupil.velY *= drag;
+                    leftPupil.x += leftPupil.velX; leftPupil.y += leftPupil.velY;
+
+                    // Update Right Eye
+                    rightPupil.velX += (clampedRightX - rightPupil.x) * acc;
+                    rightPupil.velY += (targetY - rightPupil.y) * acc;
+                    rightPupil.velX *= drag; rightPupil.velY *= drag;
+                    rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY;
 
                     // --- DRAW TO BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
@@ -489,10 +530,10 @@
                     bCtx.beginPath();
                     bCtx.ellipse(cx - eyeGap, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
                     bCtx.fill();
-                    // Left Pupil (Moving Negative Space)
+                    // Left Pupil
                     bCtx.globalCompositeOperation = 'destination-out';
                     bCtx.beginPath();
-                    bCtx.arc(cx - eyeGap + pLeftX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
+                    bCtx.arc(cx - eyeGap + leftPupil.x, cy + leftPupil.y, pupilSize, 0, Math.PI * 2);
                     bCtx.fill();
                     bCtx.globalCompositeOperation = 'source-over';
 
@@ -503,13 +544,13 @@
                     // Right Pupil
                     bCtx.globalCompositeOperation = 'destination-out';
                     bCtx.beginPath();
-                    bCtx.arc(cx + eyeGap + pRightX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
+                    bCtx.arc(cx + eyeGap + rightPupil.x, cy + rightPupil.y, pupilSize, 0, Math.PI * 2);
                     bCtx.fill();
                     bCtx.globalCompositeOperation = 'source-over';
 
                     // --- BROWS (AMPLIFIED MOVEMENT) ---
                     // Range increased for visibility
-                    const browOffset = Math.max(-5, Math.min(5, pupilPosY * 0.8));
+                    const browOffset = Math.max(-5, Math.min(5, leftPupil.y * 0.8));
                     const browY = cy - 22 + browOffset; /* LOWERED SIGNIFICANTLY (was -32) */
                     const browW = 24;
                     const browAngle = smileFactor * 0.4; // Stronger tilt (was 0.2)
@@ -545,34 +586,37 @@
                     }
                     bCtx.restore();
 
-                    // --- COMPOSITE RENDER (FAST) ---
-                    // 1. Clear Screen
-                    ctx.clearRect(0, 0, canvas.width / 2, canvas.height / 2); // Adjust for scale factor
+                    // --- COMPOSITE RENDER (RETINA) ---
+                    // 1. Clear Screen (Use logical dimensions)
+                    const rect = container.getBoundingClientRect();
+                    ctx.clearRect(0, 0, rect.width, rect.height);
 
                     ctx.save();
-                    // Match the scaling of the buffer to the screen
-                    ctx.scale(1 / 2, 1 / 2); // Counteract the context scale to draw full image
 
-                    // 2. Draw Shapes (Source)
-                    // We need to draw the bufferCanvas scaled to fit the visible canvas
-                    // The buffer is 640x640. The canvas is variable.
-                    // Actually, simpler: The Main CTX is already scaled by 2.
-                    // We just need to draw the buffer into the coordinate space.
+                    // 2. Draw Shapes (Scaled to fit)
+                    // Buffer is gridRes (640). Screen is rect.width.
+                    // We need to scale Buffer to fit Screen.
+                    const s = rect.width / gridRes;
+                    ctx.scale(s, s);
 
-                    // Let's use a simpler approach that matches the reference exactly:
-                    // Draw Shapes -> Global Composite Source-In -> Draw Pattern
-
-                    // We need to draw the BufferCanvas onto the Main Canvas.
-                    // Main Canvas is size X,Y. Buffer is 640,640.
-                    ctx.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(bufferCanvas, 0, 0);
 
                     // 3. Mask with Pattern
+                    // Pattern is already Screen Size.
+                    // We need to inverse-scale physics to match screen coords for mask?
+                    // No, GlobalComposite operates on pixels.
+                    // We need to reset transform to draw 1:1 pattern?
+
+                    ctx.restore(); // Back to DPR-scaled context
+
                     ctx.globalCompositeOperation = 'source-in';
-                    ctx.drawImage(patternCanvas, 0, 0, canvas.width, canvas.height);
+
+                    // Draw Pattern (Already sized to canvas pixel dim)
+                    // Since context is DPR scaled, we draw at Logical Size.
+                    ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
 
                     // Reset
                     ctx.globalCompositeOperation = 'source-over';
-                    ctx.restore();
                 };
                 animate();
             }
