@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v115.3-ALWAYS-ON</div>
+        <div>v116.0-HI-RES-EMOTION</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -374,7 +374,7 @@
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
                 const bufferCanvas = document.createElement('canvas');
-                const gridRes = 128;
+                const gridRes = 180; /* HI-RES UPGRADE */
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 const bCtx = bufferCanvas.getContext('2d');
 
@@ -399,8 +399,16 @@
                 const animate = () => {
                     requestAnimationFrame(animate);
 
-                    // --- IGNITION REMOVED: ALWAYS ON ---
-                    targetSmile = 0.5;
+                    // --- EXPRESSION LOGIC ---
+                    if (isOffScreen) {
+                        targetSmile = -0.5; // Slight frown when ignored
+                    } else {
+                        // Calculate distance from center (0-1)
+                        const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+                        if (dist < 0.5) targetSmile = 1.0; // Big Smile in center
+                        else targetSmile = 0.2; // Neutral/Focused elsewhere
+                    }
+
                     canvas.style.opacity = 1;
 
                     smileFactor += (targetSmile - smileFactor) * 0.15;
@@ -454,12 +462,12 @@
                     bCtx.fill();
                     bCtx.globalCompositeOperation = 'source-over';
 
-                    // --- BROWS (RESTRAINED MOVEMENT) ---
-                    // Range limited to +/- 3px
-                    const browOffset = Math.max(-3, Math.min(3, pupilPosY * 0.5));
+                    // --- BROWS (AMPLIFIED MOVEMENT) ---
+                    // Range increased for visibility
+                    const browOffset = Math.max(-5, Math.min(5, pupilPosY * 0.8));
                     const browY = cy - 22 + browOffset;
                     const browW = 24;
-                    const browAngle = smileFactor * 0.2; // Gentle tilt
+                    const browAngle = smileFactor * 0.4; // Stronger tilt (was 0.2)
 
                     bCtx.lineWidth = 5;
 
@@ -473,10 +481,10 @@
                     bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
                     bCtx.restore();
 
-                    // --- MOUTH (CRESCENT) ---
+                    // --- MOUTH (AMPLIFIED CRESCENT) ---
                     const mouthY = cy + 28; const mouthW = 32;
-                    const smileDepth = smileFactor * 14;
-                    const skewY = (smileFactor > 0) ? -6 * smileFactor : 0;
+                    const smileDepth = smileFactor * 18; // Deeper smile (was 14)
+                    const skewY = (smileFactor > 0) ? -8 * smileFactor : 0; // More tilt
 
                     if (smileFactor > 0.1) {
                         bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
