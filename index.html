@@ -25,6 +25,11 @@
             --font-sans: 'Inter', sans-serif;
         }
 
+        .hired-link:hover {
+            color: #0077b5 !important;
+            text-decoration: underline !important;
+        }
+
         body {
             margin: 0;
             background: #EAEAEA;
@@ -58,7 +63,8 @@
             backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 32px;
-            padding: 32px;
+            padding: 1.25rem;
+            /* Reduced by 50% for tight gallery look */
             display: flex;
             flex-direction: column;
             transition: all 0.4s ease;
@@ -176,7 +182,8 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #666;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+            /* Tightened vertical gap to image */
             font-weight: 700;
         }
 
@@ -209,7 +216,8 @@
         .iframe-container {
             overflow: hidden;
             border-radius: 12px;
-            background: white;
+            background: transparent;
+            /* Removed jarring white box */
             height: 400px;
             position: relative;
         }
@@ -274,11 +282,12 @@
     <div class="mesh-bg"></div>
     <div class="bento-grid">
         <div class="glass-card hero-card">
-            <span class="mono-tag" style="position: absolute; top: 32px; left: 32px;"><a
-                    href="mailto:stevendewsbery@gmail.com"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> // <a
-                    href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a></span>
+            <span class="mono-tag" style="position: absolute; top: 1.25rem; left: 1.25rem;">
+                <a href="https://www.linkedin.com/in/stevendewsbery/" target="_blank" class="hired-link"
+                    style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> //
+                <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
+                    style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
+            </span>
             <h1>I build things<br>to save my <span style="font-style: italic; color: #444;">sanity.</span></h1>
             <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
                 to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
@@ -336,7 +345,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v125.1-SPOTLIGHT-SYNC</div>
+        <div>v126.0-FINAL-POLISH</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
