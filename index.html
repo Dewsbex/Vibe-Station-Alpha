@@ -26,8 +26,16 @@
         }
 
         .hired-link:hover {
-            color: #0077b5 !important;
-            text-decoration: underline !important;
+            color: #666 !important;
+            text-decoration: line-through !important;
+            /* Easter Egg Strikethrough */
+        }
+
+        .sanity-text {
+            font-family: var(--font-serif);
+            font-style: italic;
+            text-decoration: underline wavy #999;
+            color: #222;
         }
 
         body {
@@ -47,6 +55,15 @@
             background: radial-gradient(at 0% 0%, rgba(255, 107, 107, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 0%, rgba(78, 205, 196, 0.15) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(150, 100, 255, 0.1) 0px, transparent 50%);
+        }
+
+        .mesh-bg::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+            opacity: 0.15;
+            pointer-events: none;
         }
 
         .bento-grid {
@@ -116,9 +133,24 @@
             background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
         }
 
-        .stage-visit::before,
-        .stage-visit::after {
+        .stage-visit::before {
             background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
+            filter: invert(1) grayscale(1);
+            /* NEGATIVE (v127.0) */
+            transition: all 0.6s ease;
+        }
+
+        .glass-card:hover .stage-visit::before {
+            filter: invert(0) grayscale(0);
+        }
+
+        /* Disable spotlight for Trip Curator */
+        .glass-card:hover .stage-visit::after {
+            display: none !important;
+        }
+
+        .stage-visit::after {
+            display: none !important;
         }
 
         .stage-dial::before,
@@ -217,9 +249,14 @@
             overflow: hidden;
             border-radius: 12px;
             background: transparent;
-            /* Removed jarring white box */
             height: 400px;
             position: relative;
+            filter: grayscale(100%) opacity(0.8);
+            transition: all 0.4s ease;
+        }
+
+        .iframe-container:hover {
+            filter: grayscale(0%) opacity(1);
         }
 
         iframe {
@@ -288,7 +325,7 @@
                 <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
                     style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
             </span>
-            <h1>I build things<br>to save my <span style="font-style: italic; color: #444;">sanity.</span></h1>
+            <h1>I build things<br>to save my <span class="sanity-text">sanity.</span></h1>
             <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
                 to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
         </div>
@@ -345,7 +382,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v126.0-FINAL-POLISH</div>
+        <div>v127.0-LAB-AESTHETIC</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
