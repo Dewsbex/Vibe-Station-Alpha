@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v124.2-BAR-GEOM</div>
+        <div>v124.3-TAPER-BAR</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -506,15 +506,19 @@
                         bCtx.restore();
                     });
 
-                    // --- NEON BAR MOUTH (v124.2) ---
-                    // Flat bar when neutral, curves when expressive.
+                    // --- TAPERED NEON MOUTH (v124.3) ---
+                    // Dual-curve fill for sharp ends and dynamic thickness.
                     const mouthY = cy + 34, mouthW = 42;
-                    const curviness = smileFactor * 30;
-                    bCtx.lineWidth = 14;
+                    const curviness = smileFactor * 35; // 0 when neutral = flat bar
+                    const midThickness = 12 + Math.abs(smileFactor) * 10; // Thicker when expressive
+
                     bCtx.beginPath();
                     bCtx.moveTo(cx - mouthW, mouthY);
+                    // Top quadratic boundary
                     bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY);
-                    bCtx.stroke();
+                    // Bottom quadratic boundary (offset at center)
+                    bCtx.quadraticCurveTo(cx, mouthY + curviness + midThickness, cx - mouthW, mouthY);
+                    bCtx.fill();
                     bCtx.restore();
 
                     // --- FINAL COMPOSITE ---
