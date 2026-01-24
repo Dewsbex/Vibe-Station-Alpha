@@ -387,7 +387,7 @@
                 const bufferCanvas = document.createElement('canvas'); // Shapes
                 const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
                 const gridRes = 1024; // UPGRADED from 640 for Ultra-DPI
-                const logicalRes = 256;
+                const logicalRes = 320;
 
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 patternCanvas.width = gridRes; patternCanvas.height = gridRes;
@@ -413,15 +413,17 @@
                     pCtx.scale(dpr, dpr);
                     pCtx.clearRect(0, 0, rect.width, rect.height);
 
-                    const dotSize = 2.0;
-                    const radius = (dotSize / 2) * 0.95;
+                    // Grid-320 Micro-Dots
+                    const dotSize = rect.width / 320;
+                    const radius = (dotSize / 2) * 1.35; // 1.35x OVERLAP to eliminate gaps
+
                     for (let y = 0; y < rect.height; y += dotSize) {
                         for (let x = 0; x < rect.width; x += dotSize) {
                             const cx = x + dotSize / 2;
                             const cy = y + dotSize / 2;
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 1.3, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
                             pCtx.fillStyle = '#000000'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.75, 0, Math.PI * 2);
                             pCtx.fillStyle = '#00ffff'; pCtx.fill();
                             pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.4, 0, Math.PI * 2);
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
@@ -451,44 +453,62 @@
                         else targetSmile = 0.2;
                     }
                     canvas.style.opacity = 1;
-                    smileFactor += (targetSmile - smileFactor) * 0.15; const pupilRange = 8; const eyeSeparation = 0.5; const targetLeftX = (mouseX + eyeSeparation)
-                        * pupilRange; const targetRightX = (mouseX - eyeSeparation) * pupilRange; const targetY = Math.max(-1,
-                            Math.min(1, -mouseY)) * pupilRange; const acc = 0.2, drag = 0.7; leftPupil.velX += (targetLeftX - leftPupil.x) *
-                                acc; leftPupil.velY += (targetY - leftPupil.y) * acc; leftPupil.velX *= drag; leftPupil.velY *= drag;
-                    leftPupil.x += leftPupil.velX; leftPupil.y += leftPupil.velY; rightPupil.velX += (targetRightX - rightPupil.x)
-                        * acc; rightPupil.velY += (targetY - rightPupil.y) * acc; rightPupil.velX *= drag; rightPupil.velY *= drag;
-                    rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY; bCtx.clearRect(0, 0, gridRes, gridRes);
-                    bCtx.save(); const ratio = gridRes / logicalRes; bCtx.scale(ratio, ratio); bCtx.translate(logicalRes / 2,
-                        logicalRes / 2); bCtx.scale(0.75, 0.75); bCtx.translate(-logicalRes / 2, -logicalRes / 2);
-                    bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round'; const cx = logicalRes / 2,
-                        cy = logicalRes * 0.48; const eyeW = 24, eyeH = 32, eyeGap = 34, pupilSize = 8;[-1, 1].forEach(side => {
-                            const eyeCx = cx + eyeGap * side;
-                            const p = side === -1 ? leftPupil : rightPupil;
-                            bCtx.beginPath(); bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill();
-                            bCtx.globalCompositeOperation = 'destination-out';
-                            bCtx.beginPath(); bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
-                            bCtx.globalCompositeOperation = 'source-over';
-                        });
+                    const pupilRange = 10;
+                    const eyeSeparation = 0.5;
+                    const targetLeftX = (mouseX + eyeSeparation) * pupilRange;
+                    const targetRightX = (mouseX - eyeSeparation) * pupilRange;
+                    const targetY = Math.max(-1.25, Math.min(1.25, -mouseY)) * pupilRange;
 
-                    const browOffset = Math.max(-5, Math.min(5, leftPupil.y * 0.8));
-                    const browY = cy - 22 + browOffset;
-                    const browW = 24, browAngle = smileFactor * 0.4;
-                    bCtx.lineWidth = 5;
+                    const acc = 0.2, drag = 0.7;
+                    leftPupil.velX += (targetLeftX - leftPupil.x) * acc;
+                    leftPupil.velY += (targetY - leftPupil.y) * acc;
+                    leftPupil.velX *= drag; leftPupil.velY *= drag;
+                    leftPupil.x += leftPupil.velX; leftPupil.y += leftPupil.velY;
+
+                    rightPupil.velX += (targetRightX - rightPupil.x) * acc;
+                    rightPupil.velY += (targetY - rightPupil.y) * acc;
+                    rightPupil.velX *= drag; rightPupil.velY *= drag;
+                    rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY;
+
+                    bCtx.clearRect(0, 0, gridRes, gridRes);
+                    bCtx.save();
+                    const ratio = gridRes / logicalRes;
+                    bCtx.scale(ratio, ratio);
+                    bCtx.translate(logicalRes / 2, logicalRes / 2);
+                    bCtx.scale(0.75, 0.75);
+                    bCtx.translate(-logicalRes / 2, -logicalRes / 2);
+                    bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
+                    const cx = logicalRes / 2, cy = logicalRes * 0.48;
+
+                    // Constants scaled for 320 grid (x1.25)
+                    const eyeW = 30, eyeH = 40, eyeGap = 42.5, pupilSize = 10;
+                    [-1, 1].forEach(side => {
+                        const eyeCx = cx + eyeGap * side;
+                        const p = side === -1 ? leftPupil : rightPupil;
+                        bCtx.beginPath(); bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill();
+                        bCtx.globalCompositeOperation = 'destination-out';
+                        bCtx.beginPath(); bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
+                        bCtx.globalCompositeOperation = 'source-over';
+                    });
+
+                    const browOffset = Math.max(-6, Math.min(6, leftPupil.y * 0.8));
+                    const browY = cy - 28 + browOffset;
+                    const browW = 30, browAngle = smileFactor * 0.4;
+                    bCtx.lineWidth = 6;
                     [-1, 1].forEach(side => {
                         bCtx.save(); bCtx.translate(cx + eyeGap * side, browY); bCtx.rotate(browAngle * side);
-                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
+                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 5); bCtx.quadraticCurveTo(0, -7, browW / 2, 5); bCtx.stroke();
                         bCtx.restore();
                     });
 
-                    const mouthY = cy + 42, mouthW = 32, smileDepth = smileFactor * 18, skewY = (smileFactor > 0) ? -8 *
-                        smileFactor : 0;
+                    const mouthY = cy + 52.5, mouthW = 40, smileDepth = smileFactor * 22.5, skewY = (smileFactor > 0) ? -10 * smileFactor : 0;
                     if (smileFactor > 0.1) {
                         bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
                         bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 10, cx - mouthW, mouthY); bCtx.fill();
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 12.5, cx - mouthW, mouthY); bCtx.fill();
                     } else {
-                        bCtx.lineWidth = 5; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 16), cx + mouthW, mouthY); bCtx.stroke();
+                        bCtx.lineWidth = 6; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 20), cx + mouthW, mouthY); bCtx.stroke();
                     }
                     bCtx.restore();
 
