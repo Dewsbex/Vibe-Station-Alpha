@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S. DEWSBERY | VIBE LAB (v107)</title>
+    <title>S. DEWSBERY | VIBE LAB (v115)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -62,7 +62,86 @@
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        /* REPLACED BY SPOTLIGHT ENGINE */
+        .visual-stage {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* SPOTLIGHT ENGINE */
+        .visual-stage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%);
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .visual-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(0%);
+            z-index: 2;
+            clip-path: circle(35% at center);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .glass-card:hover .visual-stage::after {
+            clip-path: circle(120% at center);
+        }
+
+        /* ASSETS */
+        .stage-social::before,
+        .stage-social::after {
+            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-visit::before,
+        .stage-visit::after {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-dial::before,
+        .stage-dial::after {
+            background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
+        }
+
+        .stage-robot {
+            background-color: #1a1a1a;
+        }
+
+        .stage-robot::before,
+        .stage-robot::after {
+            background-image: url('trim_bot_v108.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        #face-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0;
+            /* Default OFF state for Ignition Sequence */
+            transition: opacity 0.1s;
+            /* Fast flicker response */
+        }
 
         .glass-card:hover {
             transform: translateY(-6px);
@@ -71,7 +150,6 @@
 
         h1 {
             font-family: var(--font-serif);
-            /* IMPACT UPGRADE: 5.5rem for massive presence */
             font-size: 5.5rem;
             line-height: 0.9;
             letter-spacing: -0.04em;
@@ -85,7 +163,6 @@
         }
 
         .hero-sub {
-            /* READABILITY UPGRADE: 1.25rem */
             font-size: 1.25rem;
             color: var(--text-sub);
             max-width: 550px;
@@ -104,13 +181,11 @@
         .hero-card {
             grid-column: span 6;
             grid-row: span 2;
-            /* TENSION LAYOUT: Bottom-Left Anchor */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: flex-start;
             position: relative;
-            /* BREATHING ROOM: Massive Top Padding */
             padding-top: 35vh;
         }
 
@@ -122,93 +197,6 @@
             grid-column: span 12;
             margin-top: 24px;
         }
-
-        /* SPOTLIGHT ENGINE v1: Dual-Layer Masking */
-        .visual-stage {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            background-color: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            position: relative;
-            overflow: hidden;
-            /* Base container holds the structure, images are in pseudos */
-        }
-
-        /* LAYER 1: GRAYSCALE BACKGROUND (ALWAYS VISIBLE) */
-        .visual-stage::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%);
-            z-index: 1;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        /* LAYER 2: COLOR SPOTLIGHT (MASKED) */
-        .visual-stage::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(0%);
-            z-index: 2;
-            /* THE SPOTLIGHT: 35% Circle at Center */
-            clip-path: circle(35% at center);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        /* HOVER INTERACTION: EXPAND COLOR */
-        .glass-card:hover .visual-stage::after {
-            clip-path: circle(120% at center);
-        }
-
-        /* INDIVIDUAL ASSETS (Applied to both layers) */
-        .stage-social::before,
-        .stage-social::after {
-            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
-        }
-
-        .stage-visit::before,
-        .stage-visit::after {
-            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
-        }
-
-        .stage-dial::before,
-        .stage-dial::after {
-            background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
-        }
-
-        /* SOCRATIC ORB: SPECIAL HANDLING */
-        .stage-robot {
-            background-color: #1a1a1a;
-        }
-
-        .stage-robot::before,
-        .stage-robot::after {
-            background-image: url('trim_bot_v108.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
-
-        /* FACE OVERLAY: ALWAYS TOP */
-        #face-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* REFACTORED FOR COLOR POP: GLOBAL GRAYSCALE REMOVED */
-        /* #knowledge-card .visual-stage rules removed */
 
         .article-list {
             display: grid;
@@ -290,9 +278,8 @@
                     href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
                     style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a></span>
             <h1>I build things<br>to save my <span style="font-style: italic; color: #444;">sanity.</span></h1>
-            <p class="hero-sub" style="max-width: 50ch;">The wall between "I wish this existed" and "I built this today"
-                has collapsed. I use AI to kill friction in my family life. Small experiments. Zero fluff. High utility.
-            </p>
+            <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
+                to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
         </div>
         <div class="glass-card experiment-card">
             <span class="mono-tag">01 / LOGISTICS</span>
@@ -316,7 +303,6 @@
             <div class="visual-stage stage-robot" id="robot-container">
                 <canvas id="face-overlay"></canvas>
             </div>
-            <!-- RENAMED TO SOCRATIC ORB -->
             <div>
                 <h3>The Socratic Orb</h3>
                 <p style="margin:4px 0 0 0; font-size: 0.9rem; color: #666;">Voice-First AI Tutor.</p>
@@ -348,7 +334,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v114.0-SPOTLIGHT-MASK</div>
+        <div>v115.0-RETRO-PUPILS</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -363,38 +349,33 @@
                     oscillator.frequency.setValueAtTime(60, audioCtx.currentTime);
                     gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
                     oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-                    oscillator.start(); audioBtn.innerText = "AUDIO: ON [HUM]"; audioBtn.style.color = "#00ff41"; audioState = true;
-                } else { if (oscillator) oscillator.stop(); audioBtn.innerText = "AUDIO: OFF"; audioBtn.style.color = "#666"; audioState = false; }
+                    oscillator.start(); audioBtn.innerText = "OUTPUT: ACTIVE [HUM]"; audioBtn.style.color = "#00ff41"; audioState = true;
+                } else { if (oscillator) oscillator.stop(); audioBtn.innerText = "OUTPUT: SILENT"; audioBtn.style.color = "#666"; audioState = false; }
             });
 
+            let mouseX = 0, mouseY = 0;
             const updateLook = (x, y) => {
                 mouseX = (x / window.innerWidth) * 2 - 1;
                 mouseY = -(y / window.innerHeight) * 2 + 1;
             };
-
             document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
             document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-            document.addEventListener('touchstart', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
 
-            const knowledgeCard = document.getElementById('knowledge-card');
-            let isHovering = false;
-            let isOffScreen = false;
-            knowledgeCard.addEventListener('mouseenter', () => { isHovering = true; });
-            knowledgeCard.addEventListener('mouseleave', () => { isHovering = false; });
-            document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) isOffScreen = true; });
+            // STATE TRACKING FOR IGNITION SEQUENCE
+            let isOffScreen = true; // Start OFF
+            document.addEventListener('mouseout', (e) => {
+                if (!e.relatedTarget && !e.toElement) isOffScreen = true;
+            });
             document.addEventListener('mouseover', () => { isOffScreen = false; });
 
-            // --- V105: SCALED TO 0.45 (FITS IN LENS) ---
             const canvas = document.getElementById('face-overlay');
             const container = document.getElementById('robot-container');
 
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
-
                 const bufferCanvas = document.createElement('canvas');
                 const gridRes = 128;
-                bufferCanvas.width = gridRes;
-                bufferCanvas.height = gridRes;
+                bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 const bCtx = bufferCanvas.getContext('2d');
 
                 const resize = () => {
@@ -408,34 +389,50 @@
 
                 let smileFactor = 0;
                 let targetSmile = 0;
-                let eyePosX = 0, eyePosY = 0;
-                let eyeVelX = 0, eyeVelY = 0;
+                let pupilPosX = 0, pupilPosY = 0;
+                let pupilVelX = 0, pupilVelY = 0;
+
+                // IGNITION VARIABLES
+                let faceOpacity = 0;
+                let flickerCounter = 0;
 
                 const animate = () => {
                     requestAnimationFrame(animate);
 
-                    if (isOffScreen) targetSmile = -1.0;
-                    else if (isHovering) targetSmile = 1.0;
-                    else targetSmile = 0.0;
+                    // --- IGNITION SEQUENCE LOGIC ---
+                    if (isOffScreen) {
+                        targetSmile = -1.0;
+                        // FADE OFF
+                        faceOpacity -= 0.05;
+                    } else {
+                        targetSmile = 0.5; // Mild smile by default when active
+                        // IGNITION ON
+                        if (faceOpacity < 1.0) {
+                            faceOpacity += 0.02;
+                            // Add flicker while warming up
+                            if (faceOpacity < 0.8 && Math.random() > 0.7) faceOpacity -= 0.1;
+                        }
+                    }
+                    // Clamp Opacity
+                    faceOpacity = Math.max(0, Math.min(1, faceOpacity));
+                    canvas.style.opacity = faceOpacity;
 
                     smileFactor += (targetSmile - smileFactor) * 0.15;
 
-                    const trackingRange = 8; // Increased range for smaller eyes to roam
-                    const targetX = Math.max(-1, Math.min(1, mouseX)) * trackingRange;
-                    const targetY = Math.max(-1, Math.min(1, -mouseY)) * trackingRange;
+                    // PUPIL TRACKING (Moves INSIDE the static eye)
+                    const pupilRange = 4;
+                    const targetX = Math.max(-1, Math.min(1, mouseX)) * pupilRange;
+                    const targetY = Math.max(-1, Math.min(1, -mouseY)) * pupilRange;
 
-                    eyeVelX += (targetX - eyePosX) * 0.1; eyeVelY += (targetY - eyePosY) * 0.1;
-                    eyeVelX *= 0.8; eyeVelY *= 0.8;
-                    eyePosX += eyeVelX; eyePosY += eyeVelY;
+                    pupilVelX += (targetX - pupilPosX) * 0.1; pupilVelY += (targetY - pupilPosY) * 0.1;
+                    pupilVelX *= 0.8; pupilVelY *= 0.8;
+                    pupilPosX += pupilVelX; pupilPosY += pupilVelY;
 
-                    // --- DRAW TO VIRTUAL BUFFER ---
+                    // --- DRAW TO BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
                     bCtx.save();
                     bCtx.translate(gridRes / 2, gridRes / 2);
-
-                    // SCALE FIX: 0.45 (Fits inside the black glass)
-                    bCtx.scale(0.45, 0.45);
-
+                    bCtx.scale(0.45, 0.45); // Scale fits inside glass
                     bCtx.translate(-gridRes / 2, -gridRes / 2);
 
                     bCtx.fillStyle = '#FFFFFF';
@@ -443,68 +440,72 @@
                     bCtx.lineCap = 'round';
 
                     const cx = gridRes / 2;
-                    // Nudged down slightly to hit optical center of lens
                     const cy = gridRes * 0.48;
 
-                    // --- EYES (ROUND PILLS - SMALLER) ---
-                    const eyeW = 14; const eyeH = 20; const eyeGap = 28;
+                    // --- EYES (STATIC PILLS + MOVING PUPILS) ---
+                    const eyeW = 22; const eyeH = 28; const eyeGap = 28;
+                    const pupilSize = 6;
 
+                    // Left Eye Container (Static)
                     bCtx.beginPath();
-                    bCtx.ellipse(cx - eyeGap + eyePosX, cy + eyePosY, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
+                    bCtx.ellipse(cx - eyeGap, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
                     bCtx.fill();
-
+                    // Left Pupil (Moving Negative Space)
+                    bCtx.globalCompositeOperation = 'destination-out';
                     bCtx.beginPath();
-                    bCtx.ellipse(cx + eyeGap + eyePosX, cy + eyePosY, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
+                    bCtx.arc(cx - eyeGap + pupilPosX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
                     bCtx.fill();
+                    bCtx.globalCompositeOperation = 'source-over';
 
-                    // --- BROWS (ARCHED) ---
-                    const browY = cy - 20 + eyePosY;
+                    // Right Eye Container (Static)
+                    bCtx.beginPath();
+                    bCtx.ellipse(cx + eyeGap, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
+                    bCtx.fill();
+                    // Right Pupil
+                    bCtx.globalCompositeOperation = 'destination-out';
+                    bCtx.beginPath();
+                    bCtx.arc(cx + eyeGap + pupilPosX, cy + pupilPosY, pupilSize, 0, Math.PI * 2);
+                    bCtx.fill();
+                    bCtx.globalCompositeOperation = 'source-over';
+
+                    // --- BROWS (RESTRAINED MOVEMENT) ---
+                    // Range limited to +/- 3px
+                    const browOffset = Math.max(-3, Math.min(3, pupilPosY * 0.5));
+                    const browY = cy - 22 + browOffset;
                     const browW = 24;
-                    const browAngle = smileFactor * 0.3;
+                    const browAngle = smileFactor * 0.2; // Gentle tilt
 
                     bCtx.lineWidth = 5;
 
                     // Left Brow
-                    bCtx.save(); bCtx.translate(cx - eyeGap + eyePosX, browY); bCtx.rotate(-browAngle);
-                    bCtx.beginPath();
-                    bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
+                    bCtx.save(); bCtx.translate(cx - eyeGap, browY); bCtx.rotate(-browAngle);
+                    bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
                     bCtx.restore();
 
                     // Right Brow
-                    bCtx.save(); bCtx.translate(cx + eyeGap + eyePosX, browY); bCtx.rotate(browAngle);
-                    bCtx.beginPath();
-                    bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
+                    bCtx.save(); bCtx.translate(cx + eyeGap, browY); bCtx.rotate(browAngle);
+                    bCtx.beginPath(); bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
                     bCtx.restore();
 
                     // --- MOUTH (CRESCENT) ---
-                    const mouthY = cy + 28;
-                    const mouthW = 32;
+                    const mouthY = cy + 28; const mouthW = 32;
                     const smileDepth = smileFactor * 14;
                     const skewY = (smileFactor > 0) ? -6 * smileFactor : 0;
 
                     if (smileFactor > 0.1) {
-                        bCtx.beginPath();
-                        bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
                         bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
                         bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 10, cx - mouthW, mouthY);
                         bCtx.fill();
-
-                        bCtx.lineWidth = 4;
-                        bCtx.beginPath();
-                        bCtx.moveTo(cx + mouthW - 2, mouthY + skewY + 2);
-                        bCtx.lineTo(cx + mouthW + 4, mouthY + skewY - 4);
-                        bCtx.stroke();
+                        bCtx.lineWidth = 4; bCtx.beginPath(); bCtx.moveTo(cx + mouthW - 2, mouthY + skewY + 2); bCtx.lineTo(cx + mouthW + 4, mouthY + skewY - 4); bCtx.stroke();
                     } else {
-                        bCtx.lineWidth = 5;
-                        bCtx.beginPath();
+                        bCtx.lineWidth = 5; bCtx.beginPath();
                         const controlY = mouthY + (smileFactor * 16);
-                        bCtx.moveTo(cx - mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, controlY, cx + mouthW, mouthY);
-                        bCtx.stroke();
+                        bCtx.moveTo(cx - mouthW, mouthY); bCtx.quadraticCurveTo(cx, controlY, cx + mouthW, mouthY); bCtx.stroke();
                     }
                     bCtx.restore();
 
-                    // --- RENDER ---
+                    // --- RENDER PIXELS ---
                     ctx.clearRect(0, 0, canvas.width / 2, canvas.height / 2);
                     const bufferData = bCtx.getImageData(0, 0, gridRes, gridRes).data;
                     const w = container.clientWidth;
@@ -518,16 +519,12 @@
                                 const screenX = x * dotSpacing + (dotSpacing / 2);
                                 const screenY = y * dotSpacing + (dotSpacing / 2);
 
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.2, 0, Math.PI * 2);
-                                ctx.fillStyle = '#000000'; ctx.fill();
-
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius, 0, Math.PI * 2);
-                                ctx.fillStyle = '#00ffff';
-                                ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 6; ctx.fill();
-
-                                ctx.beginPath(); ctx.shadowBlur = 0;
-                                ctx.arc(screenX, screenY, dotRadius * 0.6, 0, Math.PI * 2);
-                                ctx.fillStyle = '#ffffff'; ctx.fill();
+                                // Draw Backing (Black)
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.2, 0, Math.PI * 2); ctx.fillStyle = '#000000'; ctx.fill();
+                                // Draw Glow (Cyan)
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius, 0, Math.PI * 2); ctx.fillStyle = '#00ffff'; ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 6; ctx.fill();
+                                // Draw Core (White)
+                                ctx.beginPath(); ctx.shadowBlur = 0; ctx.arc(screenX, screenY, dotRadius * 0.6, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
                             }
                         }
                     }
@@ -535,29 +532,21 @@
                 animate();
             }
 
-            // --- UPLINK UI SYSTEM (Simplified - Silent Link) ---
+            // UPLINK UI
             const createUplinkUI = (card, targetUrl) => {
                 card.style.cursor = 'pointer';
                 card.onclick = () => window.open(targetUrl, '_blank');
                 card.setAttribute('title', 'Click to Launch');
             };
-
-            // 1. INJECT UPLINK UI FOR SOCRATIC ORB
             const cardBot = document.getElementById('knowledge-card');
             if (cardBot) createUplinkUI(cardBot, 'https://socratic-orb.onrender.com/');
-
-            // 2. INJECT UPLINK UI FOR SOCIAL ETL
             document.querySelectorAll('.glass-card').forEach(card => {
-                if (card.innerText.includes('The Social ETL')) {
-                    createUplinkUI(card, 'https://social-etl-scheduler.onrender.com/');
-                }
+                if (card.innerText.includes('The Social ETL')) createUplinkUI(card, 'https://social-etl-scheduler.onrender.com/');
             });
         });
     </script>
-    <!-- Pre-warmer for Socratic Orb Render Instance -->
     <iframe src="https://socratic-orb.onrender.com/"
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
-    <!-- Pre-warmer for Social ETL Render Instance -->
     <iframe src="https://social-etl-scheduler.onrender.com/"
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
 </body>
