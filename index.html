@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v124.1-DYNAMIC-B-SHAPE</div>
+        <div>v124.2-BAR-GEOM</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -484,9 +484,9 @@
                     bCtx.scale(0.85, 0.85);
                     bCtx.translate(-logicalRes / 2, -logicalRes / 2);
                     bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
-                    const cx = logicalRes / 2, cy = logicalRes * 0.48;
+                    const cx = logicalRes / 2, cy = logicalRes * 0.52; // MOVED DOWN (v124.2)
 
-                    const eyeW = 32, eyeH = 44, eyeGap = 40, pupilSize = 11; // Centered (v124.1)
+                    const eyeW = 32, eyeH = 44, eyeGap = 35, pupilSize = 11; // CENTERED (v124.2)
                     [-1, 1].forEach(side => {
                         const eyeCx = cx + eyeGap * side;
                         const p = side === -1 ? leftPupil : rightPupil;
@@ -506,18 +506,15 @@
                         bCtx.restore();
                     });
 
-                    // --- UNIFIED BANANA MOUTH (v124.1) ---
-                    const mouthY = cy + 40, mouthW = 44;
-                    const curviness = smileFactor * 35; // Positive = Smile, Negative = Frown
-                    const thickness = 22;
-
+                    // --- NEON BAR MOUTH (v124.2) ---
+                    // Flat bar when neutral, curves when expressive.
+                    const mouthY = cy + 34, mouthW = 42;
+                    const curviness = smileFactor * 30;
+                    bCtx.lineWidth = 14;
                     bCtx.beginPath();
                     bCtx.moveTo(cx - mouthW, mouthY);
-                    // Upper boundary
                     bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY);
-                    // Lower boundary (thickness)
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness + thickness, cx - mouthW, mouthY);
-                    bCtx.fill();
+                    bCtx.stroke();
                     bCtx.restore();
 
                     // --- FINAL COMPOSITE ---
