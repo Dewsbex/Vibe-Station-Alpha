@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v122.4-HOTFIX-STABLE</div>
+        <div>v122.5-STABLE-RETINA</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -442,8 +442,9 @@
                 };
 
                 window.addEventListener('resize', init);
-                // Trigger init after a slight delay to ensure container layout is done
-                setTimeout(init, 50);
+                init(); // Call immediately
+                // Also call after a short delay to handle late layout shifts
+                setTimeout(init, 100);
 
                 let smileFactor = 0;
                 let targetSmile = 0;
@@ -592,34 +593,39 @@
                     // --- COMPOSITE RENDER (RETINA) ---
                     // 1. Clear Screen (Use logical dimensions)
                     const rect = container.getBoundingClientRect();
+
+                    // SAFETY: If container is hidden/zero, skip frame to avoid crash
+                    if (rect.width === 0 || rect.height === 0) return;
+
+                    // AUTO-RECOVER: If pattern is empty but screen is valid, re-init
+                    if (patternCanvas.width === 0 && rect.width > 0) init();
+
                     ctx.clearRect(0, 0, rect.width, rect.height);
 
                     ctx.save();
 
                     // 2. Draw Shapes (Scaled to fit)
                     // Buffer is gridRes (640). Screen is rect.width.
-                    // We need to scale Buffer to fit Screen.
                     const s = rect.width / gridRes;
                     ctx.scale(s, s);
 
                     ctx.drawImage(bufferCanvas, 0, 0);
 
-                    // 3. Mask with Pattern
-                    // Pattern is already Screen Size.
-                    // We need to inverse-scale physics to match screen coords for mask?
-                    // No, GlobalComposite operates on pixels.
-                    // We need to reset transform to draw 1:1 pattern?
-
                     ctx.restore(); // Back to DPR-scaled context
 
-                    ctx.globalCompositeOperation = 'source-in';
+                    try {
+                        ctx.globalCompositeOperation = 'source-in';
 
-                    // Draw Pattern (Already sized to canvas pixel dim)
-                    // Since context is DPR scaled, we draw at Logical Size.
-                    ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
+                        // Draw Pattern (Already sized to canvas pixel dim)
+                        if (patternCanvas.width > 0) {
+                            ctx.drawImage(patternCanvas, 0, 0, rect.width, rect.height);
+                        }
 
-                    // Reset
-                    ctx.globalCompositeOperation = 'source-over';
+                        ctx.globalCompositeOperation = 'source-over';
+                    } catch (e) {
+                        // Fallback: If pattern fails, show shapes plain
+                        ctx.globalCompositeOperation = 'source-over';
+                    }
                 };
                 animate();
             }
