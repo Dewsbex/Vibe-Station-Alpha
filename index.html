@@ -333,7 +333,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v118.0-HYPER-RES</div>
+        <div>v119.0-TUNED-ALLOY</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -415,11 +415,13 @@
                     smileFactor += (targetSmile - smileFactor) * 0.15;
 
                     // PUPIL TRACKING (Moves INSIDE the static eye)
-                    const pupilRange = 4;
+                    const pupilRange = 8; /* INCREASED RANGE (was 4) */
                     const targetX = Math.max(-1, Math.min(1, mouseX)) * pupilRange;
                     const targetY = Math.max(-1, Math.min(1, -mouseY)) * pupilRange;
 
-                    pupilVelX += (targetX - pupilPosX) * 0.1; pupilVelY += (targetY - pupilPosY) * 0.1;
+                    /* INCREASED SPEED: 0.25 (was 0.1) */
+                    pupilVelX += (targetX - pupilPosX) * 0.25;
+                    pupilVelY += (targetY - pupilPosY) * 0.25;
                     pupilVelX *= 0.8; pupilVelY *= 0.8;
                     pupilPosX += pupilVelX; pupilPosY += pupilVelY;
 
@@ -444,7 +446,7 @@
                     const cy = logicalRes * 0.48;
 
                     // --- EYES (STATIC PILLS + MOVING PUPILS) ---
-                    const eyeW = 24; const eyeH = 32; const eyeGap = 40; // Widened Eyes
+                    const eyeW = 24; const eyeH = 32; const eyeGap = 34; /* MOVED CLOSER (was 40) */
                     const pupilSize = 8;
 
                     // Left Eye Container (Static)
