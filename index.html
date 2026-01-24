@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.5-RES-BOOST</div>
+        <div>v123.6-ULTRA-DENSE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -413,9 +413,9 @@
                     pCtx.scale(dpr, dpr);
                     pCtx.clearRect(0, 0, rect.width, rect.height);
 
-                    // Grid-320 Micro-Dots
-                    const dotSize = rect.width / 320;
-                    const radius = (dotSize / 2) * 1.35; // 1.35x OVERLAP to eliminate gaps
+                    // Grid-640 ULTRA-DENSE Matrix
+                    const dotSize = rect.width / 640;
+                    const radius = (dotSize / 2) * 1.5; // 1.5x OVERLAP to ensure ZERO GAPS
 
                     for (let y = 0; y < rect.height; y += dotSize) {
                         for (let x = 0; x < rect.width; x += dotSize) {
@@ -446,12 +446,16 @@
                 const animate = () => {
                     requestAnimationFrame(animate);
                     if (isOffScreen) {
-                        targetSmile = -0.5;
+                        targetSmile = -0.3; // Slight frown/unhappy
                     } else {
                         const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-                        if (dist < 0.5) targetSmile = 1.0;
+                        if (dist < 0.6) targetSmile = 1.0;
                         else targetSmile = 0.2;
                     }
+
+                    // EXPRESSION PHYSICS (RESTORED)
+                    smileFactor += (targetSmile - smileFactor) * 0.1;
+
                     canvas.style.opacity = 1;
                     const pupilRange = 10;
                     const eyeSeparation = 0.5;
