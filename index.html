@@ -25,17 +25,43 @@
             --font-sans: 'Inter', sans-serif;
         }
 
-        .hired-link:hover {
-            color: #666 !important;
-            text-decoration: line-through !important;
-            /* Easter Egg Strikethrough */
+        /* UPDATED: Signature Hover */
+        .header-signature:hover {
+            text-decoration: line-through;
+            opacity: 0.7;
+            cursor: pointer;
         }
 
-        .sanity-text {
-            font-family: var(--font-serif);
+        /* UPDATED: Sanity Typography */
+        .manifesto-highlight {
+            text-decoration: none;
+            font-family: 'Playfair Display', 'Georgia', serif;
             font-style: italic;
-            text-decoration: underline wavy #999;
-            color: #222;
+            font-weight: 400;
+        }
+
+        /* UPDATED: Feed Header */
+        .mono-tag.feed-header {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
+            display: block;
+        }
+
+        /* UPDATED: Feed Visuals */
+        .feed-section-container {
+            filter: brightness(0.92) contrast(1.05);
+        }
+
+        /* UPDATED: Scrollbar Masking */
+        .linkedin-card-wrapper {
+            overflow: hidden;
+        }
+
+        .linkedin-iframe {
+            width: calc(100% + 18px);
+            padding-right: 18px;
         }
 
         body {
@@ -320,12 +346,13 @@
     <div class="bento-grid">
         <div class="glass-card hero-card">
             <span class="mono-tag" style="position: absolute; top: 1.25rem; left: 1.25rem;">
-                <a href="https://www.linkedin.com/in/stevendewsbery/" target="_blank" class="hired-link"
+                <a href="https://www.linkedin.com/in/stevendewsbery/" target="_blank"
+                    class="hired-link header-signature"
                     style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> //
                 <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
                     style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
             </span>
-            <h1>I build things<br>to save my <span class="sanity-text">sanity.</span></h1>
+            <h1>I build things<br>to save my <span class="manifesto-highlight">sanity.</span></h1>
             <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
                 to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
         </div>
@@ -366,15 +393,15 @@
             </div>
         </div>
         <div class="glass-card footer-card">
-            <span class="mono-tag">LOGS // RECENT UPDATES</span>
-            <div class="article-list">
-                <div class="iframe-container"><iframe class="linkedin-card"
+            <div class="mono-tag feed-header">LOGS // RECENT UPDATES</div>
+            <div class="article-list feed-section-container">
+                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7398259560202870784?collapsed=1"></iframe>
                 </div>
-                <div class="iframe-container"><iframe class="linkedin-card"
+                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7396180596089126913?collapsed=1"></iframe>
                 </div>
-                <div class="iframe-container"><iframe class="linkedin-card"
+                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7411503127176163328?collapsed=1"></iframe>
                 </div>
             </div>
