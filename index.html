@@ -373,11 +373,38 @@
 
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
-                const bufferCanvas = document.createElement('canvas');
-                const gridRes = 640; /* HYPER-RES RETINA UPGRADE */
-                const logicalRes = 256; /* Base coordinate system for consistent positioning */
+                const bufferCanvas = document.createElement('canvas'); // Shapes
+                const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
+                const gridRes = 640;
+                const logicalRes = 256;
+
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
+                patternCanvas.width = gridRes; patternCanvas.height = gridRes;
+
                 const bCtx = bufferCanvas.getContext('2d');
+                const pCtx = patternCanvas.getContext('2d');
+
+                // PRE-RENDER DOT PATTERN (ONCE)
+                const renderPattern = () => {
+                    pCtx.clearRect(0, 0, gridRes, gridRes);
+                    const dotSpacing = gridRes / 64; // Relative spacing (approx 10px at 640)
+                    const dotRadius = (dotSpacing / 2) * 1.15;
+
+                    for (let y = 0; y < gridRes; y += dotSpacing) {
+                        for (let x = 0; x < gridRes; x += dotSpacing) {
+                            // Backing
+                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 1.3, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#000000'; pCtx.fill();
+                            // Glow
+                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 1.1, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#00ffff'; pCtx.fill();
+                            // Core
+                            pCtx.beginPath(); pCtx.arc(x + dotSpacing / 2, y + dotSpacing / 2, dotRadius * 0.7, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#ffffff'; pCtx.fill();
+                        }
+                    }
+                };
+                renderPattern();
 
                 const resize = () => {
                     const scale = 2;
@@ -483,7 +510,7 @@
                     // --- BROWS (AMPLIFIED MOVEMENT) ---
                     // Range increased for visibility
                     const browOffset = Math.max(-5, Math.min(5, pupilPosY * 0.8));
-                    const browY = cy - 38 + browOffset; /* LIFTED HIGHER (was -30) */
+                    const browY = cy - 32 + browOffset; /* LOWERED (was -38) */
                     const browW = 24;
                     const browAngle = smileFactor * 0.4; // Stronger tilt (was 0.2)
 
@@ -518,29 +545,34 @@
                     }
                     bCtx.restore();
 
-                    // --- RENDER PIXELS ---
-                    ctx.clearRect(0, 0, canvas.width / 2, canvas.height / 2);
-                    const bufferData = bCtx.getImageData(0, 0, gridRes, gridRes).data;
-                    const w = container.clientWidth;
-                    const dotSpacing = w / gridRes;
-                    const dotRadius = (dotSpacing / 2) * 1.15;
+                    // --- COMPOSITE RENDER (FAST) ---
+                    // 1. Clear Screen
+                    ctx.clearRect(0, 0, canvas.width / 2, canvas.height / 2); // Adjust for scale factor
 
-                    for (let y = 0; y < gridRes; y++) {
-                        for (let x = 0; x < gridRes; x++) {
-                            const i = (y * gridRes + x) * 4;
-                            if (bufferData[i + 3] > 100) {
-                                const screenX = x * dotSpacing + (dotSpacing / 2);
-                                const screenY = y * dotSpacing + (dotSpacing / 2);
+                    ctx.save();
+                    // Match the scaling of the buffer to the screen
+                    ctx.scale(1 / 2, 1 / 2); // Counteract the context scale to draw full image
 
-                                // Draw Backing (Black)
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.3, 0, Math.PI * 2); ctx.fillStyle = '#000000'; ctx.fill();
-                                // Draw Glow (Cyan)
-                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.1, 0, Math.PI * 2); ctx.fillStyle = '#00ffff'; ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 4; ctx.fill();
-                                // Draw Core (White)
-                                ctx.beginPath(); ctx.shadowBlur = 0; ctx.arc(screenX, screenY, dotRadius * 0.7, 0, Math.PI * 2); ctx.fillStyle = '#ffffff'; ctx.fill();
-                            }
-                        }
-                    }
+                    // 2. Draw Shapes (Source)
+                    // We need to draw the bufferCanvas scaled to fit the visible canvas
+                    // The buffer is 640x640. The canvas is variable.
+                    // Actually, simpler: The Main CTX is already scaled by 2.
+                    // We just need to draw the buffer into the coordinate space.
+
+                    // Let's use a simpler approach that matches the reference exactly:
+                    // Draw Shapes -> Global Composite Source-In -> Draw Pattern
+
+                    // We need to draw the BufferCanvas onto the Main Canvas.
+                    // Main Canvas is size X,Y. Buffer is 640,640.
+                    ctx.drawImage(bufferCanvas, 0, 0, canvas.width, canvas.height);
+
+                    // 3. Mask with Pattern
+                    ctx.globalCompositeOperation = 'source-in';
+                    ctx.drawImage(patternCanvas, 0, 0, canvas.width, canvas.height);
+
+                    // Reset
+                    ctx.globalCompositeOperation = 'source-over';
+                    ctx.restore();
                 };
                 animate();
             }
