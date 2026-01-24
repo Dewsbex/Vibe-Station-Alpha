@@ -336,7 +336,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v123.7-VIVID-VFD</div>
+        <div>v123.8-SOLID-GLOW</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -413,9 +413,9 @@
                     pCtx.scale(dpr, dpr);
                     pCtx.clearRect(0, 0, rect.width, rect.height);
 
-                    // Grid-640 ULTRA-DENSE Matrix
-                    const dotSize = rect.width / 640;
-                    const radius = (dotSize / 2) * 1.5; // 1.5x OVERLAP to ensure ZERO GAPS
+                    // Grid-1000 ULTRA-DENSE SOLID Matrix
+                    const dotSize = rect.width / 1000;
+                    const radius = (dotSize / 2) * 1.55; // 1.55x overlap for solidity
 
                     for (let y = 0; y < rect.height; y += dotSize) {
                         for (let x = 0; x < rect.width; x += dotSize) {
@@ -423,10 +423,10 @@
                             const cy = y + dotSize / 2;
                             pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
                             pCtx.fillStyle = '#000000'; pCtx.fill();
-                            // BRIGHTER CORES (v123.7 Enhancement)
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
+                            // SOLID COLOR CORES (v123.8 Ultra-Brightness)
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.95, 0, Math.PI * 2);
                             pCtx.fillStyle = '#00ffff'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.6, 0, Math.PI * 2);
+                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2);
                             pCtx.fillStyle = '#ffffff'; pCtx.fill();
                         }
                     }
@@ -506,17 +506,18 @@
                         bCtx.restore();
                     });
 
-                    // --- BANANA MOUTH (v123.7 UPGRADE) ---
-                    const mouthY = cy + 55, mouthW = 55, smileDepth = 15 + smileFactor * 35;
+                    // --- THICK BANANA MOUTH (v123.8 RE-ENGINEERED) ---
+                    const mouthY = cy + 42, mouthW = 42, smileDepth = 5 + smileFactor * 32;
                     bCtx.lineJoin = 'round';
                     if (smileFactor > 0.1) {
                         bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
-                        // Deep curve for "Banana" shape
+                        // Curved upper and MUCH deeper lower for thickness
                         bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY);
-                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 15, cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 22, cx - mouthW, mouthY);
                         bCtx.fill();
                     } else {
-                        bCtx.lineWidth = 7; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
+                        // Thicker neutral line
+                        bCtx.lineWidth = 10; bCtx.beginPath(); bCtx.moveTo(cx - mouthW, mouthY);
                         bCtx.quadraticCurveTo(cx, mouthY + (smileFactor * 25), cx + mouthW, mouthY); bCtx.stroke();
                     }
                     bCtx.restore();
