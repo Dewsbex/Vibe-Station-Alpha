@@ -633,15 +633,16 @@
                     const midThickness = baseThickness + Math.abs(smileFactor) * 10;
 
                     // Curvature logic: middle bends based on smileFactor
-                    // CORRECTED: Positive = smile (middle bends UP), Negative = frown (middle bends DOWN)
+                    // Positive smileFactor (close) = smile (middle DOWN)
+                    // Negative smileFactor (far) = frown (middle UP)
                     // Corners always stay at mouthY (same location)
                     let curviness;
                     if (smileFactor > 0) {
-                        // Smile: middle bends UP (negative Y for upward curve)
-                        curviness = -smileFactor * 30; // Negative Y = upward on canvas
+                        // Smile: middle bends DOWN (positive Y = downward curve)
+                        curviness = smileFactor * 30; // Positive Y = downward on canvas
                     } else if (smileFactor < 0) {
-                        // Frown: middle bends DOWN (positive Y for downward curve)
-                        curviness = -smileFactor * 35; // Double negative = positive Y = downward
+                        // Frown: middle bends UP (negative Y = upward curve)
+                        curviness = smileFactor * 35; // Negative Y = upward on canvas
                     } else {
                         // Neutral: flat
                         curviness = 0;
