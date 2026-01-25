@@ -95,6 +95,8 @@
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(320px, auto);
+            /* v107.2 Symmetrical rows */
             gap: 24px;
             max-width: 1400px;
             margin: 60px auto;
@@ -106,8 +108,8 @@
             backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 32px;
-            padding: 1.25rem;
-            /* Reduced by 50% for tight gallery look */
+            padding: 1rem 1.25rem 0.75rem 1.25rem;
+            /* v107.2 Tuned vertical padding */
             display: flex;
             flex-direction: column;
             transition: all 0.4s ease;
@@ -216,7 +218,8 @@
 
         h1 {
             font-family: var(--font-serif);
-            font-size: 5.5rem;
+            font-size: 6rem;
+            /* v107.2 Billboard Scale */
             line-height: 0.9;
             letter-spacing: -0.04em;
             margin: 0 0 24px 0;
@@ -229,10 +232,12 @@
         }
 
         .hero-sub {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
+            /* v107.2 Expanded */
             color: var(--text-sub);
-            max-width: 550px;
-            line-height: 1.6;
+            max-width: 650px;
+            /* v107.2 Slightly wider */
+            line-height: 1.4;
         }
 
         .mono-tag {
@@ -262,7 +267,10 @@
 
         .footer-card {
             grid-column: span 12;
-            margin-top: 24px;
+            margin-top: 60px;
+            /* v107.2 Extra Separation */
+            min-height: 700px;
+            /* v107.2 Expanded Section */
         }
 
         .article-list {
@@ -288,7 +296,8 @@
         iframe {
             width: 100%;
             border: none;
-            height: 420px;
+            height: 570px;
+            /* v107.2 +35% Expansion */
             margin-top: -10px;
         }
 
@@ -352,7 +361,7 @@
                 <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
                     style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
             </span>
-            <h1>I build things<br>to save my <span class="manifesto-highlight">sanity.</span></h1>
+            <h1>I build things<br>to save my<br><span class="manifesto-highlight">sanity.</span></h1>
             <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
                 to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
         </div>
