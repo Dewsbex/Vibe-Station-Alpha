@@ -347,7 +347,7 @@
     <div class="bento-grid">
         <div class="glass-card hero-card">
             <span class="mono-tag" style="position: absolute; top: 1.25rem; left: 1.25rem;">
-                <a href="https://www.linkedin.com/in/stevendewsbery/" target="_blank"
+                <a href="https://www.linkedin.com/in/systemsstrategist" target="_blank"
                     class="hired-link header-signature"
                     style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> //
                 <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
@@ -458,10 +458,10 @@
 
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
-                const bufferCanvas = document.createElement('canvas'); // Shapes
-                const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
-                const gridRes = 1024; // UPGRADED from 640 for Ultra-DPI
-                const logicalRes = 320;
+                const bufferCanvas = document.createElement('canvas'); // Face geometry
+                const patternCanvas = document.createElement('canvas'); // Neon-Solid dot grid
+                const gridRes = 1024; // VFD grid resolution
+                const logicalRes = 320; // Logical coordinate space
 
                 bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
                 patternCanvas.width = gridRes; patternCanvas.height = gridRes;
@@ -469,45 +469,47 @@
                 const bCtx = bufferCanvas.getContext('2d');
                 const pCtx = patternCanvas.getContext('2d');
 
-                // --- HIGH-DPI INIT & RESIZE ---
+                // --- NEON-SOLID DOT GRID INITIALIZATION ---
+                const initDotGrid = () => {
+                    pCtx.clearRect(0, 0, gridRes, gridRes);
+                    pCtx.fillStyle = '#000000';
+                    pCtx.fillRect(0, 0, gridRes, gridRes);
+
+                    const dotSize = gridRes / 1024;
+                    const radius = dotSize / 2;
+
+                    for (let y = 0; y < gridRes; y += dotSize) {
+                        for (let x = 0; x < gridRes; x += dotSize) {
+                            const cx = x + dotSize / 2;
+                            const cy = y + dotSize / 2;
+
+                            // Outer Glow: Pure Cyan at 98% radius
+                            pCtx.beginPath();
+                            pCtx.arc(cx, cy, radius * 0.98, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#00ffff';
+                            pCtx.fill();
+
+                            // Inner Core: Pure White at 90% radius
+                            pCtx.beginPath();
+                            pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
+                            pCtx.fillStyle = '#ffffff';
+                            pCtx.fill();
+                        }
+                    }
+                };
+
+                // --- HIGH-DPI CANVAS SETUP ---
                 const init = () => {
                     const rect = canvas.getBoundingClientRect();
                     const dpr = window.devicePixelRatio || 1;
                     if (rect.width === 0) return;
 
-                    // 1. Match physical pixels for the main display
                     canvas.width = rect.width * dpr;
                     canvas.height = rect.height * dpr;
-
-                    // 2. Prepare high-density dot pattern
-                    patternCanvas.width = canvas.width;
-                    patternCanvas.height = canvas.height;
-                    const pCtx = patternCanvas.getContext('2d');
-                    pCtx.setTransform(1, 0, 0, 1, 0, 0);
-                    pCtx.scale(dpr, dpr);
-                    pCtx.clearRect(0, 0, rect.width, rect.height);
-
-                    // Grid-1000 NEON-SOLID Matrix
-                    const dotSize = rect.width / 1000;
-                    const radius = (dotSize / 2) * 1.6; // 1.6x OVERLAP for total solidity
-
-                    for (let y = 0; y < rect.height; y += dotSize) {
-                        for (let x = 0; x < rect.width; x += dotSize) {
-                            const cx = x + dotSize / 2;
-                            const cy = y + dotSize / 2;
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#000000'; pCtx.fill();
-
-                            // NEON SOLID CORE (v123.9 Max Luminance)
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.98, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#00ffff'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#ffffff'; pCtx.fill();
-                        }
-                    }
-
-                    // 3. Reset main context to physical mapping
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+                    // Initialize static dot grid once
+                    initDotGrid();
                 };
 
                 window.addEventListener('resize', init);
@@ -521,18 +523,23 @@
 
                 const animate = () => {
                     requestAnimationFrame(animate);
+
+                    // --- BEHAVIOR & INTERACTION ---
                     if (isOffScreen) {
-                        targetSmile = -0.5; // Idle Frown
+                        targetSmile = -0.5; // Idle Hyper-Frown
                     } else {
                         const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-                        if (dist < 0.6) targetSmile = 1.0;
-                        else targetSmile = -0.2; // Wary/Frown
+                        if (dist < 0.6) {
+                            targetSmile = 1.0; // Full Smile (cursor near center)
+                        } else {
+                            targetSmile = -0.2; // Neutral/Slight Frown (cursor at edges)
+                        }
                     }
 
-                    // SMOOTH TRANSITION (v123.9)
+                    // Smooth interpolation (lerp 0.12)
                     smileFactor += (targetSmile - smileFactor) * 0.12;
 
-                    canvas.style.opacity = 1;
+                    // --- PUPIL PHYSICS (Spring with drag=0.7) ---
                     const pupilRange = 10;
                     const eyeSeparation = 0.5;
                     const targetLeftX = (mouseX + eyeSeparation) * pupilRange;
@@ -550,44 +557,82 @@
                     rightPupil.velX *= drag; rightPupil.velY *= drag;
                     rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY;
 
+                    // --- FACIAL GEOMETRY (Logical 320x320 Space) ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
                     bCtx.save();
                     const ratio = gridRes / logicalRes;
                     bCtx.scale(ratio, ratio);
-                    bCtx.translate(logicalRes / 2, logicalRes / 2);
-                    bCtx.scale(0.85, 0.85);
-                    bCtx.translate(-logicalRes / 2, -logicalRes / 2);
-                    bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
-                    const cx = logicalRes / 2, cy = logicalRes * 0.48; // Face lifted vertically (v125.0)
 
-                    const eyeW = 32, eyeH = 44, eyeGap = 35, pupilSize = 11; // CENTERED (v124.2)
+                    // Center face at (160, 153.6) with 0.85x scale
+                    const cx = 160, cy = 153.6;
+                    bCtx.translate(cx, cy);
+                    bCtx.scale(0.85, 0.85);
+                    bCtx.translate(-cx, -cy);
+
+                    bCtx.fillStyle = '#FFFFFF';
+                    bCtx.strokeStyle = '#FFFFFF';
+                    bCtx.lineCap = 'round';
+
+                    // --- THE EYES (32w x 44h, 35 units spacing) ---
+                    const eyeW = 32, eyeH = 44, eyeGap = 35, pupilSize = 11;
                     [-1, 1].forEach(side => {
                         const eyeCx = cx + eyeGap * side;
                         const p = side === -1 ? leftPupil : rightPupil;
-                        bCtx.beginPath(); bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill();
+
+                        // Draw eye
+                        bCtx.beginPath();
+                        bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
+                        bCtx.fill();
+
+                        // Cut out pupil (11 unit radius)
                         bCtx.globalCompositeOperation = 'destination-out';
-                        bCtx.beginPath(); bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
+                        bCtx.beginPath();
+                        bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2);
+                        bCtx.fill();
                         bCtx.globalCompositeOperation = 'source-over';
                     });
 
+                    // --- EYEBROWS ---
                     const browOffset = Math.max(-6, Math.min(6, leftPupil.y * 0.8));
                     const browY = cy - 30 + browOffset;
                     const browW = 32, browAngle = smileFactor * 0.45;
                     bCtx.lineWidth = 7;
                     [-1, 1].forEach(side => {
-                        bCtx.save(); bCtx.translate(cx + eyeGap * side, browY); bCtx.rotate(browAngle * side);
-                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 5); bCtx.quadraticCurveTo(0, -8, browW / 2, 5); bCtx.stroke();
+                        bCtx.save();
+                        bCtx.translate(cx + eyeGap * side, browY);
+                        bCtx.rotate(browAngle * side);
+                        bCtx.beginPath();
+                        bCtx.moveTo(-browW / 2, 5);
+                        bCtx.quadraticCurveTo(0, -8, browW / 2, 5);
+                        bCtx.stroke();
                         bCtx.restore();
                     });
 
-                    // --- REFINED NEON MOUTH (v124.4) ---
-                    // Droopy corners during frowns and shallower smile.
-                    const mouthY = cy + 34, mouthW = 42;
-                    const smileIntensity = (smileFactor > 0) ? 25 : 35; // Shallow smile
-                    const curviness = smileFactor * smileIntensity;
-                    const cornerY = (smileFactor < 0) ? -smileFactor * 16 : 0; // Corners drop when frowning
-                    const midThickness = 12 + Math.abs(smileFactor) * 10;
+                    // --- THE MOUTH ("Banana" Logic) ---
+                    const mouthY = cy + 34;
+                    const mouthW = 42; // Base width
 
+                    // Dynamic thickness: starts at 12px, increases by 10px * smileFactor
+                    const baseThickness = 12;
+                    const midThickness = baseThickness + Math.abs(smileFactor) * 10;
+
+                    // Curvature logic
+                    let curviness, cornerY;
+                    if (smileFactor > 0) {
+                        // State A (Smile): Curves upward - "Banana shape"
+                        curviness = smileFactor * 25;
+                        cornerY = 0;
+                    } else if (smileFactor < 0) {
+                        // State C (Frown): Curves downward - "Droopy inverted banana"
+                        curviness = smileFactor * 35;
+                        cornerY = -smileFactor * 16; // Corners drop
+                    } else {
+                        // State B (Neutral): Flat bar
+                        curviness = 0;
+                        cornerY = 0;
+                    }
+
+                    // Draw mouth using quadratic curves
                     bCtx.beginPath();
                     bCtx.moveTo(cx - mouthW, mouthY + cornerY);
                     bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY + cornerY);
@@ -595,22 +640,22 @@
                     bCtx.fill();
                     bCtx.restore();
 
-                    // --- FINAL COMPOSITE ---
+                    // --- FINAL COMPOSITE (Neon-Solid Masking) ---
                     const rect = canvas.getBoundingClientRect();
                     if (rect.width === 0) return;
 
                     ctx.setTransform(1, 0, 0, 1, 0, 0);
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-                    // 1. Draw Shapes at physical scale to match screen pixels
+                    // 1. Draw face geometry
                     ctx.save();
                     ctx.scale(canvas.width / gridRes, canvas.width / gridRes);
                     ctx.drawImage(bufferCanvas, 0, 0);
                     ctx.restore();
 
-                    // 2. Apply Pattern Mask at 1:1 physical resolution
-                    ctx.globalCompositeOperation = 'source-in';
-                    ctx.drawImage(patternCanvas, 0, 0);
+                    // 2. Mask with Neon-Solid dot pattern (destination-in)
+                    ctx.globalCompositeOperation = 'destination-in';
+                    ctx.drawImage(patternCanvas, 0, 0, gridRes, gridRes, 0, 0, canvas.width, canvas.width);
                     ctx.globalCompositeOperation = 'source-over';
                 };
                 animate();
