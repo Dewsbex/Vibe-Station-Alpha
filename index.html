@@ -525,26 +525,28 @@
                     requestAnimationFrame(animate);
 
                     // --- BEHAVIOR & INTERACTION ---
+                    // Calculate distance from center for smile intensity
+                    const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
+
                     if (isOffScreen) {
-                        targetSmile = -0.5; // Idle Hyper-Frown
+                        targetSmile = -1.0; // Maximum frown when off screen
                     } else {
-                        const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-                        if (dist < 0.6) {
-                            targetSmile = 1.0; // Full Smile (cursor near center)
-                        } else {
-                            targetSmile = -0.2; // Neutral/Slight Frown (cursor at edges)
-                        }
+                        // Map distance to smile: closer = more smile, farther = more frown
+                        // dist ranges from 0 (center) to ~1.4 (corners)
+                        // We want: 0 dist = 1.0 smile, 1.4 dist = -1.0 frown
+                        targetSmile = 1.0 - (dist * 1.7); // Linear mapping
+                        targetSmile = Math.max(-1.0, Math.min(1.0, targetSmile)); // Clamp
                     }
 
                     // Smooth interpolation (lerp 0.12)
                     smileFactor += (targetSmile - smileFactor) * 0.12;
 
                     // --- PUPIL PHYSICS (Spring with drag=0.7) ---
-                    const pupilRange = 10;
+                    const pupilRange = 8; // Reduced from 10 to keep pupils more centered
                     const eyeSeparation = 0.5;
                     const targetLeftX = (mouseX + eyeSeparation) * pupilRange;
                     const targetRightX = (mouseX - eyeSeparation) * pupilRange;
-                    const targetY = Math.max(-1.25, Math.min(1.25, -mouseY)) * pupilRange;
+                    const targetY = Math.max(-1.0, Math.min(1.0, -mouseY)) * pupilRange; // Reduced vertical range
 
                     const acc = 0.2, drag = 0.7;
                     leftPupil.velX += (targetLeftX - leftPupil.x) * acc;
@@ -563,14 +565,15 @@
                     const ratio = gridRes / logicalRes;
                     bCtx.scale(ratio, ratio);
 
-                    // Center face at (160, 153.6) with 0.85x scale
+                    // Center face at (160, 153.6) with 0.75x scale (reduced to prevent eyebrow clipping)
                     const cx = 160, cy = 153.6;
                     bCtx.translate(cx, cy);
-                    bCtx.scale(0.85, 0.85);
+                    bCtx.scale(0.75, 0.75); // Reduced from 0.85 to prevent touching bezel
                     bCtx.translate(-cx, -cy);
 
-                    bCtx.fillStyle = '#FFFFFF';
-                    bCtx.strokeStyle = '#FFFFFF';
+                    // Light bright blue/cyan color
+                    bCtx.fillStyle = '#00FFFF';
+                    bCtx.strokeStyle = '#00FFFF';
                     bCtx.lineCap = 'round';
 
                     // --- THE EYES (32w x 44h, 35 units spacing) ---
@@ -592,15 +595,27 @@
                         bCtx.globalCompositeOperation = 'source-over';
                     });
 
-                    // --- EYEBROWS ---
+                    // --- EYEBROWS (Asymmetric frown behavior) ---
                     const browOffset = Math.max(-6, Math.min(6, leftPupil.y * 0.8));
                     const browY = cy - 30 + browOffset;
-                    const browW = 32, browAngle = smileFactor * 0.45;
+                    const browW = 32;
                     bCtx.lineWidth = 7;
                     [-1, 1].forEach(side => {
                         bCtx.save();
                         bCtx.translate(cx + eyeGap * side, browY);
-                        bCtx.rotate(browAngle * side);
+
+                        // Asymmetric eyebrow angle for frown:
+                        // When frowning (smileFactor < 0), inner side lowers, outer side raises
+                        let browAngle;
+                        if (smileFactor < 0) {
+                            // Frown: inner end down, outer end up
+                            browAngle = smileFactor * 0.6 * side; // Inverted asymmetry
+                        } else {
+                            // Smile: symmetric raise
+                            browAngle = smileFactor * 0.45 * side;
+                        }
+
+                        bCtx.rotate(browAngle);
                         bCtx.beginPath();
                         bCtx.moveTo(-browW / 2, 5);
                         bCtx.quadraticCurveTo(0, -8, browW / 2, 5);
@@ -608,35 +623,35 @@
                         bCtx.restore();
                     });
 
-                    // --- THE MOUTH ("Banana" Logic) ---
+                    // --- THE MOUTH (Distance-based "Banana" Logic) ---
                     const mouthY = cy + 34;
-                    const mouthW = 42; // Base width
+                    const mouthW = 42; // Base width - corners stay at same location
 
-                    // Dynamic thickness: starts at 12px, increases by 10px * smileFactor
+                    // Dynamic thickness: starts at 12px, increases with expression intensity
                     const baseThickness = 12;
                     const midThickness = baseThickness + Math.abs(smileFactor) * 10;
 
-                    // Curvature logic
-                    let curviness, cornerY;
+                    // Curvature logic: middle bends based on smileFactor
+                    // Positive = smile (middle bends DOWN), Negative = frown (middle bends UP)
+                    // Corners always stay at mouthY (same location)
+                    let curviness;
                     if (smileFactor > 0) {
-                        // State A (Smile): Curves upward - "Banana shape"
-                        curviness = smileFactor * 25;
-                        cornerY = 0;
+                        // Smile: middle bends DOWN (negative Y), deeper with higher smileFactor
+                        curviness = -smileFactor * 30; // Negative = downward curve
                     } else if (smileFactor < 0) {
-                        // State C (Frown): Curves downward - "Droopy inverted banana"
-                        curviness = smileFactor * 35;
-                        cornerY = -smileFactor * 16; // Corners drop
+                        // Frown: middle bends UP (positive Y), higher with more negative smileFactor
+                        curviness = -smileFactor * 35; // Double negative = positive = upward curve
                     } else {
-                        // State B (Neutral): Flat bar
+                        // Neutral: flat
                         curviness = 0;
-                        cornerY = 0;
                     }
 
                     // Draw mouth using quadratic curves
+                    // Corners stay at mouthY, middle moves to mouthY + curviness
                     bCtx.beginPath();
-                    bCtx.moveTo(cx - mouthW, mouthY + cornerY);
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY + cornerY);
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness + midThickness, cx - mouthW, mouthY + cornerY);
+                    bCtx.moveTo(cx - mouthW, mouthY); // Left corner (fixed)
+                    bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY); // Top curve
+                    bCtx.quadraticCurveTo(cx, mouthY + curviness + midThickness, cx - mouthW, mouthY); // Bottom curve
                     bCtx.fill();
                     bCtx.restore();
 
