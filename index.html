@@ -4,10 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v107.3-ANTIGRAVITY)</title>
+    <title>S. DEWSBERY | VIBE LAB (v107)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -23,49 +20,6 @@
             --font-serif: 'Playfair Display', serif;
             --font-mono: 'JetBrains Mono', monospace;
             --font-sans: 'Inter', sans-serif;
-        }
-
-        /* UPDATED: Signature Hover */
-        .header-signature:hover {
-            text-decoration: line-through;
-            opacity: 0.7;
-            cursor: pointer;
-        }
-
-        /* UPDATED: Sanity Typography */
-        .manifesto-highlight {
-            text-decoration: none;
-            font-family: 'Playfair Display', 'Georgia', serif;
-            font-style: italic;
-            font-weight: 400;
-        }
-
-        /* UPDATED: Feed Header */
-        .mono-tag.feed-header {
-            margin-bottom: 1rem;
-            /* Tighten header to cards */
-            padding-left: 0;
-            /* Align flush */
-            border-bottom: none;
-            /* Removing previous styles if any */
-            padding-bottom: 0;
-            width: 100%;
-            display: block;
-        }
-
-        /* UPDATED: Feed Visuals */
-        .feed-section-container {
-            filter: brightness(0.92) contrast(1.05);
-        }
-
-        /* UPDATED: Scrollbar Masking */
-        .linkedin-card-wrapper {
-            overflow: hidden;
-        }
-
-        .linkedin-iframe {
-            width: calc(100% + 18px);
-            padding-right: 18px;
         }
 
         body {
@@ -87,22 +41,10 @@
                 radial-gradient(at 100% 100%, rgba(150, 100, 255, 0.1) 0px, transparent 50%);
         }
 
-        .mesh-bg::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
-            opacity: 0.15;
-            pointer-events: none;
-        }
-
         .bento-grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            grid-auto-rows: minmax(320px, auto);
-            /* v107.2 Symmetrical rows */
-            gap: 1rem;
-            /* Antigravity: Tightened gap */
+            gap: 24px;
             max-width: 1400px;
             margin: 60px auto;
             padding: 0 24px 150px 24px;
@@ -113,113 +55,14 @@
             backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 32px;
-            padding: 1rem;
-            /* Antigravity: Purge the Padding */
+            padding: 32px;
             display: flex;
             flex-direction: column;
             transition: all 0.4s ease;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
 
-        .glass-card h3 {
-            margin-top: 0.75rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .visual-stage {
-            width: 100%;
-            aspect-ratio: 1 / 1;
-            border-radius: 16px;
-            margin-bottom: 24px;
-            background-color: rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* SPOTLIGHT ENGINE */
-        .visual-stage::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(100%);
-            z-index: 1;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .visual-stage::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-size: cover;
-            background-position: center;
-            filter: grayscale(0%);
-            z-index: 2;
-            clip-path: circle(15% at 50% 48%);
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-        }
-
-        .glass-card:hover .visual-stage::after {
-            clip-path: circle(120% at 50% 48%);
-        }
-
-        /* ASSETS */
-        .stage-social::before,
-        .stage-social::after {
-            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
-        }
-
-        .stage-visit::before {
-            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
-            filter: invert(1) grayscale(1);
-            /* NEGATIVE (v127.0) */
-            transition: all 0.6s ease;
-        }
-
-        .glass-card:hover .stage-visit::before {
-            filter: invert(0) grayscale(0);
-        }
-
-        /* Disable spotlight for Trip Curator */
-        .glass-card:hover .stage-visit::after {
-            display: none !important;
-        }
-
-        .stage-visit::after {
-            display: none !important;
-        }
-
-        .stage-dial::before,
-        .stage-dial::after {
-            background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
-        }
-
-        .stage-robot {
-            background-color: #1a1a1a;
-        }
-
-        .stage-robot::before,
-        .stage-robot::after {
-            background-image: url('trim_bot_v108.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
-        }
-
-        #face-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 10;
-            opacity: 1;
-            /* ALWAYS ON - IGNITION REMOVED */
-            /* transition removed */
-        }
+        /* REPLACED BY SPOTLIGHT ENGINE */
 
         .glass-card:hover {
             transform: translateY(-6px);
@@ -228,8 +71,8 @@
 
         h1 {
             font-family: var(--font-serif);
-            font-size: 6rem;
-            /* v107.2 Billboard Scale */
+            /* IMPACT UPGRADE: 5.5rem for massive presence */
+            font-size: 5.5rem;
             line-height: 0.9;
             letter-spacing: -0.04em;
             margin: 0 0 24px 0;
@@ -242,12 +85,11 @@
         }
 
         .hero-sub {
-            font-size: 1.5rem;
-            /* v107.2 Expanded */
+            /* READABILITY UPGRADE: 1.25rem */
+            font-size: 1.25rem;
             color: var(--text-sub);
-            max-width: 650px;
-            /* v107.2 Slightly wider */
-            line-height: 1.4;
+            max-width: 550px;
+            line-height: 1.6;
         }
 
         .mono-tag {
@@ -255,22 +97,21 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #666;
-            margin-bottom: 8px;
-            /* Tightened vertical gap to image */
+            margin-bottom: 12px;
             font-weight: 700;
         }
 
         .hero-card {
             grid-column: span 6;
             grid-row: span 2;
+            /* TENSION LAYOUT: Bottom-Left Anchor */
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
             align-items: flex-start;
             position: relative;
+            /* BREATHING ROOM: Massive Top Padding */
             padding-top: 35vh;
-            padding-bottom: 0;
-            /* Antigravity: Vertical Balance */
         }
 
         .experiment-card {
@@ -279,13 +120,95 @@
 
         .footer-card {
             grid-column: span 12;
-            margin-top: 3rem;
-            /* Antigravity: Tightened Separator */
-            min-height: 700px;
-            /* v107.2 Expanded Section */
-            padding-top: 0;
-            /* Antigravity: Kill Container Padding */
+            margin-top: 24px;
         }
+
+        /* SPOTLIGHT ENGINE v1: Dual-Layer Masking */
+        .visual-stage {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+            /* Base container holds the structure, images are in pseudos */
+        }
+
+        /* LAYER 1: GRAYSCALE BACKGROUND (ALWAYS VISIBLE) */
+        .visual-stage::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(100%);
+            z-index: 1;
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* LAYER 2: COLOR SPOTLIGHT (MASKED) */
+        .visual-stage::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-size: cover;
+            background-position: center;
+            filter: grayscale(0%);
+            z-index: 2;
+            /* THE SPOTLIGHT: 35% Circle at Center */
+            clip-path: circle(35% at center);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        /* HOVER INTERACTION: EXPAND COLOR */
+        .glass-card:hover .visual-stage::after {
+            clip-path: circle(120% at center);
+        }
+
+        /* INDIVIDUAL ASSETS (Applied to both layers) */
+        .stage-social::before,
+        .stage-social::after {
+            background-image: url('https://images.unsplash.com/photo-1509048191080-d2984bad6ae5?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-visit::before,
+        .stage-visit::after {
+            background-image: url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=800&q=80');
+        }
+
+        .stage-dial::before,
+        .stage-dial::after {
+            background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
+        }
+
+        /* SOCRATIC ORB: SPECIAL HANDLING */
+        .stage-robot {
+            background-color: #1a1a1a;
+        }
+
+        .stage-robot::before,
+        .stage-robot::after {
+            background-image: url('trim_bot_v108.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+        }
+
+        /* FACE OVERLAY: ALWAYS TOP */
+        #face-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* REFACTORED FOR COLOR POP: GLOBAL GRAYSCALE REMOVED */
+        /* #knowledge-card .visual-stage rules removed */
 
         .article-list {
             display: grid;
@@ -296,22 +219,15 @@
         .iframe-container {
             overflow: hidden;
             border-radius: 12px;
-            background: transparent;
+            background: white;
             height: 400px;
             position: relative;
-            filter: grayscale(100%) opacity(0.8);
-            transition: all 0.4s ease;
-        }
-
-        .iframe-container:hover {
-            filter: grayscale(0%) opacity(1);
         }
 
         iframe {
             width: 100%;
             border: none;
-            height: 570px;
-            /* v107.2 +35% Expansion */
+            height: 420px;
             margin-top: -10px;
         }
 
@@ -368,16 +284,15 @@
     <div class="mesh-bg"></div>
     <div class="bento-grid">
         <div class="glass-card hero-card">
-            <span class="mono-tag" style="position: absolute; top: 1.25rem; left: 1.25rem;">
-                <a href="https://www.linkedin.com/in/stevendewsbery/" target="_blank"
-                    class="hired-link header-signature"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> //
-                <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
-            </span>
-            <h1>I build things<br>to save my<br><span class="manifesto-highlight">sanity.</span></h1>
-            <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
-                to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
+            <span class="mono-tag" style="position: absolute; top: 32px; left: 32px;"><a
+                    href="mailto:stevendewsbery@gmail.com"
+                    style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> // <a
+                    href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
+                    style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a></span>
+            <h1>I build things<br>to save my <span style="font-style: italic; color: #444;">sanity.</span></h1>
+            <p class="hero-sub" style="max-width: 50ch;">The wall between "I wish this existed" and "I built this today"
+                has collapsed. I use AI to kill friction in my family life. Small experiments. Zero fluff. High utility.
+            </p>
         </div>
         <div class="glass-card experiment-card">
             <span class="mono-tag">01 / LOGISTICS</span>
@@ -401,6 +316,7 @@
             <div class="visual-stage stage-robot" id="robot-container">
                 <canvas id="face-overlay"></canvas>
             </div>
+            <!-- RENAMED TO SOCRATIC ORB -->
             <div>
                 <h3>The Socratic Orb</h3>
                 <p style="margin:4px 0 0 0; font-size: 0.9rem; color: #666;">Voice-First AI Tutor.</p>
@@ -416,15 +332,15 @@
             </div>
         </div>
         <div class="glass-card footer-card">
-            <div class="mono-tag feed-header">LOGS // RECENT UPDATES</div>
-            <div class="article-list feed-section-container">
-                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
+            <span class="mono-tag">LOGS // RECENT UPDATES</span>
+            <div class="article-list">
+                <div class="iframe-container"><iframe class="linkedin-card"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7398259560202870784?collapsed=1"></iframe>
                 </div>
-                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
+                <div class="iframe-container"><iframe class="linkedin-card"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7396180596089126913?collapsed=1"></iframe>
                 </div>
-                <div class="iframe-container linkedin-card-wrapper"><iframe class="linkedin-card linkedin-iframe"
+                <div class="iframe-container"><iframe class="linkedin-card"
                         src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7411503127176163328?collapsed=1"></iframe>
                 </div>
             </div>
@@ -432,12 +348,11 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v107.3-ANTIGRAVITY</div>
+        <div>v114.0-SPOTLIGHT-MASK</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
         window.addEventListener('load', () => {
-            console.log("VIBE-STATION-ALPHA v107.3 PREPARING...");
             const audioBtn = document.getElementById('audio-toggle');
             let audioState = false, audioCtx, oscillator, gainNode;
 
@@ -448,210 +363,201 @@
                     oscillator.frequency.setValueAtTime(60, audioCtx.currentTime);
                     gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
                     oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
-                    oscillator.start(); audioBtn.innerText = "OUTPUT: ACTIVE [HUM]"; audioBtn.style.color = "#00ff41"; audioState =
-                        true;
-                } else {
-                    if (oscillator) oscillator.stop(); audioBtn.innerText = "OUTPUT: SILENT"; audioBtn.style.color = "#666";
-                    audioState = false;
-                }
+                    oscillator.start(); audioBtn.innerText = "AUDIO: ON [HUM]"; audioBtn.style.color = "#00ff41"; audioState = true;
+                } else { if (oscillator) oscillator.stop(); audioBtn.innerText = "AUDIO: OFF"; audioBtn.style.color = "#666"; audioState = false; }
             });
 
-            let mouseX = 0, mouseY = 0;
             const updateLook = (x, y) => {
                 mouseX = (x / window.innerWidth) * 2 - 1;
                 mouseY = -(y / window.innerHeight) * 2 + 1;
-                isOffScreen = false; // FORCE ON PRESENCE
             };
-            document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
-            document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), {
-                passive:
-                    true
-            });
 
-            // STATE TRACKING FOR IGNITION SEQUENCE
-            let isOffScreen = true; // Start OFF
-            document.addEventListener('mouseout', (e) => {
-                if (!e.relatedTarget && !e.toElement) isOffScreen = true;
-            });
+            document.addEventListener('mousemove', (e) => updateLook(e.clientX, e.clientY));
+            document.addEventListener('touchmove', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+            document.addEventListener('touchstart', (e) => updateLook(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+
+            const knowledgeCard = document.getElementById('knowledge-card');
+            let isHovering = false;
+            let isOffScreen = false;
+            knowledgeCard.addEventListener('mouseenter', () => { isHovering = true; });
+            knowledgeCard.addEventListener('mouseleave', () => { isHovering = false; });
+            document.addEventListener('mouseout', (e) => { if (!e.relatedTarget) isOffScreen = true; });
             document.addEventListener('mouseover', () => { isOffScreen = false; });
 
+            // --- V105: SCALED TO 0.45 (FITS IN LENS) ---
             const canvas = document.getElementById('face-overlay');
             const container = document.getElementById('robot-container');
 
             if (canvas && container) {
                 const ctx = canvas.getContext('2d');
-                const bufferCanvas = document.createElement('canvas'); // Shapes
-                const patternCanvas = document.createElement('canvas'); // Dot Pattern Setup
-                const gridRes = 1024; // UPGRADED from 640 for Ultra-DPI
-                const logicalRes = 320;
 
-                bufferCanvas.width = gridRes; bufferCanvas.height = gridRes;
-                patternCanvas.width = gridRes; patternCanvas.height = gridRes;
-
+                const bufferCanvas = document.createElement('canvas');
+                const gridRes = 128;
+                bufferCanvas.width = gridRes;
+                bufferCanvas.height = gridRes;
                 const bCtx = bufferCanvas.getContext('2d');
-                const pCtx = patternCanvas.getContext('2d');
 
-                // --- HIGH-DPI INIT & RESIZE ---
-                const init = () => {
-                    const rect = canvas.getBoundingClientRect();
-                    const dpr = window.devicePixelRatio || 1;
-                    if (rect.width === 0) return;
-
-                    // 1. Match physical pixels for the main display
-                    canvas.width = rect.width * dpr;
-                    canvas.height = rect.height * dpr;
-
-                    // 2. Prepare high-density dot pattern
-                    patternCanvas.width = canvas.width;
-                    patternCanvas.height = canvas.height;
-                    const pCtx = patternCanvas.getContext('2d');
-                    pCtx.setTransform(1, 0, 0, 1, 0, 0);
-                    pCtx.scale(dpr, dpr);
-                    pCtx.clearRect(0, 0, rect.width, rect.height);
-
-                    // Grid-1000 NEON-SOLID Matrix
-                    const dotSize = rect.width / 1000;
-                    const radius = (dotSize / 2) * 1.6; // 1.6x OVERLAP for total solidity
-
-                    for (let y = 0; y < rect.height; y += dotSize) {
-                        for (let x = 0; x < rect.width; x += dotSize) {
-                            const cx = x + dotSize / 2;
-                            const cy = y + dotSize / 2;
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#000000'; pCtx.fill();
-
-                            // NEON SOLID CORE (v123.9 Max Luminance)
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.98, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#00ffff'; pCtx.fill();
-                            pCtx.beginPath(); pCtx.arc(cx, cy, radius * 0.9, 0, Math.PI * 2);
-                            pCtx.fillStyle = '#ffffff'; pCtx.fill();
-                        }
-                    }
-
-                    // 3. Reset main context to physical mapping
-                    ctx.setTransform(1, 0, 0, 1, 0, 0);
+                const resize = () => {
+                    const scale = 2;
+                    canvas.width = container.clientWidth * scale;
+                    canvas.height = container.clientHeight * scale;
+                    ctx.scale(scale, scale);
                 };
-
-                window.addEventListener('resize', init);
-                init();
-                setTimeout(init, 100);
+                window.addEventListener('resize', resize);
+                resize();
 
                 let smileFactor = 0;
                 let targetSmile = 0;
-                let leftPupil = { x: 0, y: 0, velX: 0, velY: 0 };
-                let rightPupil = { x: 0, y: 0, velX: 0, velY: 0 };
+                let eyePosX = 0, eyePosY = 0;
+                let eyeVelX = 0, eyeVelY = 0;
 
                 const animate = () => {
                     requestAnimationFrame(animate);
-                    if (isOffScreen) {
-                        targetSmile = -0.5; // Idle Frown
-                    } else {
-                        const dist = Math.sqrt(mouseX * mouseX + mouseY * mouseY);
-                        if (dist < 0.6) targetSmile = 1.0;
-                        else targetSmile = -0.2; // Wary/Frown
-                    }
 
-                    // SMOOTH TRANSITION (v123.9)
-                    smileFactor += (targetSmile - smileFactor) * 0.12;
+                    if (isOffScreen) targetSmile = -1.0;
+                    else if (isHovering) targetSmile = 1.0;
+                    else targetSmile = 0.0;
 
-                    canvas.style.opacity = 1;
-                    const pupilRange = 10;
-                    const eyeSeparation = 0.5;
-                    const targetLeftX = (mouseX + eyeSeparation) * pupilRange;
-                    const targetRightX = (mouseX - eyeSeparation) * pupilRange;
-                    const targetY = Math.max(-1.25, Math.min(1.25, -mouseY)) * pupilRange;
+                    smileFactor += (targetSmile - smileFactor) * 0.15;
 
-                    const acc = 0.2, drag = 0.7;
-                    leftPupil.velX += (targetLeftX - leftPupil.x) * acc;
-                    leftPupil.velY += (targetY - leftPupil.y) * acc;
-                    leftPupil.velX *= drag; leftPupil.velY *= drag;
-                    leftPupil.x += leftPupil.velX; leftPupil.y += leftPupil.velY;
+                    const trackingRange = 8; // Increased range for smaller eyes to roam
+                    const targetX = Math.max(-1, Math.min(1, mouseX)) * trackingRange;
+                    const targetY = Math.max(-1, Math.min(1, -mouseY)) * trackingRange;
 
-                    rightPupil.velX += (targetRightX - rightPupil.x) * acc;
-                    rightPupil.velY += (targetY - rightPupil.y) * acc;
-                    rightPupil.velX *= drag; rightPupil.velY *= drag;
-                    rightPupil.x += rightPupil.velX; rightPupil.y += rightPupil.velY;
+                    eyeVelX += (targetX - eyePosX) * 0.1; eyeVelY += (targetY - eyePosY) * 0.1;
+                    eyeVelX *= 0.8; eyeVelY *= 0.8;
+                    eyePosX += eyeVelX; eyePosY += eyeVelY;
 
+                    // --- DRAW TO VIRTUAL BUFFER ---
                     bCtx.clearRect(0, 0, gridRes, gridRes);
                     bCtx.save();
-                    const ratio = gridRes / logicalRes;
-                    bCtx.scale(ratio, ratio);
-                    bCtx.translate(logicalRes / 2, logicalRes / 2);
-                    bCtx.scale(0.85, 0.85);
-                    bCtx.translate(-logicalRes / 2, -logicalRes / 2);
-                    bCtx.fillStyle = '#FFFFFF'; bCtx.strokeStyle = '#FFFFFF'; bCtx.lineCap = 'round';
-                    const cx = logicalRes / 2, cy = logicalRes * 0.48; // Face lifted vertically (v125.0)
+                    bCtx.translate(gridRes / 2, gridRes / 2);
 
-                    const eyeW = 32, eyeH = 44, eyeGap = 35, pupilSize = 11; // CENTERED (v124.2)
-                    [-1, 1].forEach(side => {
-                        const eyeCx = cx + eyeGap * side;
-                        const p = side === -1 ? leftPupil : rightPupil;
-                        bCtx.beginPath(); bCtx.ellipse(eyeCx, cy, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2); bCtx.fill();
-                        bCtx.globalCompositeOperation = 'destination-out';
-                        bCtx.beginPath(); bCtx.arc(eyeCx + p.x, cy + p.y, pupilSize, 0, Math.PI * 2); bCtx.fill();
-                        bCtx.globalCompositeOperation = 'source-over';
-                    });
+                    // SCALE FIX: 0.45 (Fits inside the black glass)
+                    bCtx.scale(0.45, 0.45);
 
-                    const browOffset = Math.max(-6, Math.min(6, leftPupil.y * 0.8));
-                    const browY = cy - 30 + browOffset;
-                    const browW = 32, browAngle = smileFactor * 0.45;
-                    bCtx.lineWidth = 7;
-                    [-1, 1].forEach(side => {
-                        bCtx.save(); bCtx.translate(cx + eyeGap * side, browY); bCtx.rotate(browAngle * side);
-                        bCtx.beginPath(); bCtx.moveTo(-browW / 2, 5); bCtx.quadraticCurveTo(0, -8, browW / 2, 5); bCtx.stroke();
-                        bCtx.restore();
-                    });
+                    bCtx.translate(-gridRes / 2, -gridRes / 2);
 
-                    // --- REFINED NEON MOUTH (v124.4) ---
-                    // Droopy corners during frowns and shallower smile.
-                    const mouthY = cy + 34, mouthW = 42;
-                    const smileIntensity = (smileFactor > 0) ? 25 : 35; // Shallow smile
-                    const curviness = smileFactor * smileIntensity;
-                    const cornerY = (smileFactor < 0) ? -smileFactor * 16 : 0; // Corners drop when frowning
-                    const midThickness = 12 + Math.abs(smileFactor) * 10;
+                    bCtx.fillStyle = '#FFFFFF';
+                    bCtx.strokeStyle = '#FFFFFF';
+                    bCtx.lineCap = 'round';
+
+                    const cx = gridRes / 2;
+                    // Nudged down slightly to hit optical center of lens
+                    const cy = gridRes * 0.48;
+
+                    // --- EYES (ROUND PILLS - SMALLER) ---
+                    const eyeW = 14; const eyeH = 20; const eyeGap = 28;
 
                     bCtx.beginPath();
-                    bCtx.moveTo(cx - mouthW, mouthY + cornerY);
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness, cx + mouthW, mouthY + cornerY);
-                    bCtx.quadraticCurveTo(cx, mouthY + curviness + midThickness, cx - mouthW, mouthY + cornerY);
+                    bCtx.ellipse(cx - eyeGap + eyePosX, cy + eyePosY, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
                     bCtx.fill();
+
+                    bCtx.beginPath();
+                    bCtx.ellipse(cx + eyeGap + eyePosX, cy + eyePosY, eyeW / 2, eyeH / 2, 0, 0, Math.PI * 2);
+                    bCtx.fill();
+
+                    // --- BROWS (ARCHED) ---
+                    const browY = cy - 20 + eyePosY;
+                    const browW = 24;
+                    const browAngle = smileFactor * 0.3;
+
+                    bCtx.lineWidth = 5;
+
+                    // Left Brow
+                    bCtx.save(); bCtx.translate(cx - eyeGap + eyePosX, browY); bCtx.rotate(-browAngle);
+                    bCtx.beginPath();
+                    bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
                     bCtx.restore();
 
-                    // --- FINAL COMPOSITE ---
-                    const rect = canvas.getBoundingClientRect();
-                    if (rect.width === 0) return;
+                    // Right Brow
+                    bCtx.save(); bCtx.translate(cx + eyeGap + eyePosX, browY); bCtx.rotate(browAngle);
+                    bCtx.beginPath();
+                    bCtx.moveTo(-browW / 2, 4); bCtx.quadraticCurveTo(0, -6, browW / 2, 4); bCtx.stroke();
+                    bCtx.restore();
 
-                    ctx.setTransform(1, 0, 0, 1, 0, 0);
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    // --- MOUTH (CRESCENT) ---
+                    const mouthY = cy + 28;
+                    const mouthW = 32;
+                    const smileDepth = smileFactor * 14;
+                    const skewY = (smileFactor > 0) ? -6 * smileFactor : 0;
 
-                    // 1. Draw Shapes at physical scale to match screen pixels
-                    ctx.save();
-                    ctx.scale(canvas.width / gridRes, canvas.width / gridRes);
-                    ctx.drawImage(bufferCanvas, 0, 0);
-                    ctx.restore();
+                    if (smileFactor > 0.1) {
+                        bCtx.beginPath();
+                        bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth, cx + mouthW, mouthY + skewY);
+                        bCtx.quadraticCurveTo(cx, mouthY + smileDepth + 10, cx - mouthW, mouthY);
+                        bCtx.fill();
 
-                    // 2. Apply Pattern Mask at 1:1 physical resolution
-                    ctx.globalCompositeOperation = 'source-in';
-                    ctx.drawImage(patternCanvas, 0, 0);
-                    ctx.globalCompositeOperation = 'source-over';
+                        bCtx.lineWidth = 4;
+                        bCtx.beginPath();
+                        bCtx.moveTo(cx + mouthW - 2, mouthY + skewY + 2);
+                        bCtx.lineTo(cx + mouthW + 4, mouthY + skewY - 4);
+                        bCtx.stroke();
+                    } else {
+                        bCtx.lineWidth = 5;
+                        bCtx.beginPath();
+                        const controlY = mouthY + (smileFactor * 16);
+                        bCtx.moveTo(cx - mouthW, mouthY);
+                        bCtx.quadraticCurveTo(cx, controlY, cx + mouthW, mouthY);
+                        bCtx.stroke();
+                    }
+                    bCtx.restore();
+
+                    // --- RENDER ---
+                    ctx.clearRect(0, 0, canvas.width / 2, canvas.height / 2);
+                    const bufferData = bCtx.getImageData(0, 0, gridRes, gridRes).data;
+                    const w = container.clientWidth;
+                    const dotSpacing = w / gridRes;
+                    const dotRadius = (dotSpacing / 2) * 1.15;
+
+                    for (let y = 0; y < gridRes; y++) {
+                        for (let x = 0; x < gridRes; x++) {
+                            const i = (y * gridRes + x) * 4;
+                            if (bufferData[i + 3] > 100) {
+                                const screenX = x * dotSpacing + (dotSpacing / 2);
+                                const screenY = y * dotSpacing + (dotSpacing / 2);
+
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius * 1.2, 0, Math.PI * 2);
+                                ctx.fillStyle = '#000000'; ctx.fill();
+
+                                ctx.beginPath(); ctx.arc(screenX, screenY, dotRadius, 0, Math.PI * 2);
+                                ctx.fillStyle = '#00ffff';
+                                ctx.shadowColor = '#00ffff'; ctx.shadowBlur = 6; ctx.fill();
+
+                                ctx.beginPath(); ctx.shadowBlur = 0;
+                                ctx.arc(screenX, screenY, dotRadius * 0.6, 0, Math.PI * 2);
+                                ctx.fillStyle = '#ffffff'; ctx.fill();
+                            }
+                        }
+                    }
                 };
                 animate();
             }
 
-            const createUplinkUI = (card, url) => {
-                card.style.cursor = 'pointer'; card.onclick = () => window.open(url, '_blank'); card.setAttribute('title',
-                    'Launch');
+            // --- UPLINK UI SYSTEM (Simplified - Silent Link) ---
+            const createUplinkUI = (card, targetUrl) => {
+                card.style.cursor = 'pointer';
+                card.onclick = () => window.open(targetUrl, '_blank');
+                card.setAttribute('title', 'Click to Launch');
             };
-            const orbCard = document.getElementById('knowledge-card');
-            if (orbCard) createUplinkUI(orbCard, 'https://dewsbex.github.io/The-socratic-orb/');
+
+            // 1. INJECT UPLINK UI FOR SOCRATIC ORB
+            const cardBot = document.getElementById('knowledge-card');
+            if (cardBot) createUplinkUI(cardBot, 'https://socratic-orb.onrender.com/');
+
+            // 2. INJECT UPLINK UI FOR SOCIAL ETL
             document.querySelectorAll('.glass-card').forEach(card => {
-                if (card.innerText.includes('The Social ETL')) createUplinkUI(card,
-                    'https://social-etl-scheduler.onrender.com/');
+                if (card.innerText.includes('The Social ETL')) {
+                    createUplinkUI(card, 'https://social-etl-scheduler.onrender.com/');
+                }
             });
         });
     </script>
-    <iframe src="https://dewsbex.github.io/The-socratic-orb/"
+    <!-- Pre-warmer for Socratic Orb Render Instance -->
+    <iframe src="https://socratic-orb.onrender.com/"
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
+    <!-- Pre-warmer for Social ETL Render Instance -->
     <iframe src="https://social-etl-scheduler.onrender.com/"
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
 </body>
