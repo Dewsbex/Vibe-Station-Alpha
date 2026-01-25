@@ -619,11 +619,18 @@
                 card.style.cursor = 'pointer'; card.onclick = () => window.open(url, '_blank'); card.setAttribute('title',
                     'Launch');
             };
-            const orbCard = document.getElementById('knowledge-card');
-            if (orbCard) createUplinkUI(orbCard, 'https://socratic-orb.onrender.com/');
+
+            // Add click handlers for all project cards
             document.querySelectorAll('.glass-card').forEach(card => {
-                if (card.innerText.includes('The Social ETL')) createUplinkUI(card,
-                    'https://social-etl-scheduler.onrender.com/');
+                if (card.innerText.includes('The Social ETL')) {
+                    createUplinkUI(card, 'https://social-etl-scheduler.onrender.com/');
+                } else if (card.innerText.includes('The Trip Curator')) {
+                    createUplinkUI(card, 'https://dewsbex.github.io/The-Trip-Curator/');
+                } else if (card.innerText.includes('The Socratic Orb')) {
+                    createUplinkUI(card, 'https://dewsbex.github.io/The-socratic-orb/');
+                } else if (card.innerText.includes('The Decision Dial')) {
+                    createUplinkUI(card, 'https://sovereign-sentinel.pages.dev/');
+                }
             });
         });
     </script>
