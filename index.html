@@ -106,8 +106,8 @@
             backdrop-filter: blur(var(--glass-blur));
             border: 1px solid var(--glass-border);
             border-radius: 32px;
-            padding: 1.25rem;
-            /* Reduced by 50% for tight gallery look */
+            padding: 0.75rem 1rem;
+            /* Tight vertical, comfortable horizontal */
             display: flex;
             flex-direction: column;
             transition: all 0.4s ease;
@@ -118,7 +118,7 @@
             width: 100%;
             aspect-ratio: 1 / 1;
             border-radius: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 8px;
             background-color: rgba(0, 0, 0, 0.03);
             border: 1px solid rgba(255, 255, 255, 0.6);
             position: relative;
@@ -224,7 +224,7 @@
 
         h3 {
             font-size: 1.2rem;
-            margin: 0;
+            margin: 0 0 2px 0;
             font-weight: 700;
         }
 
@@ -240,8 +240,8 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             color: #666;
-            margin-bottom: 8px;
-            /* Tightened vertical gap to image */
+            margin-bottom: 4px;
+            /* Minimal gap to image */
             font-weight: 700;
         }
 
