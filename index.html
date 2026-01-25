@@ -354,8 +354,9 @@
                     style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
             </span>
             <h1>I build things<br>to save my<br><span class="manifesto-highlight">sanity.</span></h1>
-            <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed. I use AI
-                to kill friction in my family life. Small experiments. Zero fluff. High utility.</p>
+            <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed.<br>
+                I use AI to kill friction in my family life.<br>
+                Small experiments. Zero fluff. High utility.</p>
         </div>
         <div class="glass-card experiment-card">
             <span class="mono-tag">01 / LOGISTICS</span>
@@ -632,15 +633,15 @@
                     const midThickness = baseThickness + Math.abs(smileFactor) * 10;
 
                     // Curvature logic: middle bends based on smileFactor
-                    // Positive = smile (middle bends DOWN), Negative = frown (middle bends UP)
+                    // CORRECTED: Positive = smile (middle bends UP), Negative = frown (middle bends DOWN)
                     // Corners always stay at mouthY (same location)
                     let curviness;
                     if (smileFactor > 0) {
-                        // Smile: middle bends DOWN (negative Y), deeper with higher smileFactor
-                        curviness = -smileFactor * 30; // Negative = downward curve
+                        // Smile: middle bends UP (negative Y for upward curve)
+                        curviness = -smileFactor * 30; // Negative Y = upward on canvas
                     } else if (smileFactor < 0) {
-                        // Frown: middle bends UP (positive Y), higher with more negative smileFactor
-                        curviness = -smileFactor * 35; // Double negative = positive = upward curve
+                        // Frown: middle bends DOWN (positive Y for downward curve)
+                        curviness = -smileFactor * 35; // Double negative = positive Y = downward
                     } else {
                         // Neutral: flat
                         curviness = 0;
