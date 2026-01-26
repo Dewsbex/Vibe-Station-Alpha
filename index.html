@@ -396,38 +396,36 @@
             margin-bottom: 2rem;
             margin-top: 0;
 
-            /* THE PHYSICS: High-Contrast Gradient */
-            /* We use CSS Variable --light-x to move the light position */
+            /* THE PHYSICS: HEAVY DARK STONE */
+            /* We use SOLID colors (no transparency) to ensure visibility */
             background-image: linear-gradient(135deg,
-                    rgba(0, 0, 0, 0.95) 0%,
-                    /* Deep Shadow */
-                    rgba(0, 0, 0, 0.85) 35%,
-                    rgba(0, 0, 0, 0.30) 50%,
-                    /* The Light Beam (Translucent) */
-                    /* The Light Beam */
-                    rgba(0, 0, 0, 0.85) 65%,
-                    rgba(0, 0, 0, 0.15) 100%
-                    /* Reflection */
+                    #1a1a1a 0%,
+                    /* Solid Almost-Black (Deep Shadow) */
+                    #1a1a1a 40%,
+                    /* Solid Almost-Black */
+                    #555555 50%,
+                    /* Mid-Grey (The Light Beam - darker now) */
+                    #1a1a1a 60%,
+                    /* Solid Almost-Black */
+                    #1a1a1a 100%
+                    /* Solid Almost-Black */
                 );
             background-size: 200% 100%;
 
-            /* DYNAMIC POSITIONING */
-            /* Default: -100% (Off to the left) */
-            /* The JS updates --light-x based on cursor position */
+            /* DYNAMIC POSITIONING (Linked to JS) */
             background-position: var(--light-x, -100%) 0;
-
-            /* Smoothness factor: Slight drag for weight */
             transition: background-position 0.1s ease-out;
 
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
 
-            /* Crisp Chisel Highlight */
-            text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+            /* CRISP EDGE HIGHLIGHT */
+            /* This white line defines the bottom lip of the carving */
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.8);
 
             /* Fallback */
-            background-color: #222;
+            background-color: #1a1a1a;
         }
 
         /* MICRO-KERNING: Squeeze the top two lines tighter */
