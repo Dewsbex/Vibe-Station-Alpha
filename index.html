@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v121-INK-BLOCK-PUBLISHED -->
+<!-- Build: v122-STONE-GRAIN -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v121-INK-BLOCK)</title>
+    <title>S. DEWSBERY | VIBE LAB (v122-STONE-GRAIN)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -373,6 +373,27 @@
             border-radius: 32px;
 
             position: relative;
+
+            /* v122: Stone grain texture simulation */
+            background-image:
+                url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            background-blend-mode: multiply;
+        }
+
+        /* v122: Bevel edge effect */
+        .manifesto-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 32px;
+            box-shadow:
+                inset 0 1px 2px rgba(255, 255, 255, 0.6),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+            z-index: 1;
         }
 
         /* --- 2. SYSTEM LABEL (Tech Contrast) --- */
@@ -396,19 +417,19 @@
             letter-spacing: -0.02em;
             margin-bottom: 2rem;
             margin-top: 0;
+            position: relative;
+            z-index: 2;
 
-            /* THE PHYSICS: SOLID INK GRADIENT (NO TRANSPARENCY) */
-            /* This creates the look of deep, dark stone */
+            /* v122 FIX: MUCH DARKER GRADIENT */
             background-image: linear-gradient(135deg,
-                    #0a0a0a 0%,
-                    #1a1a1a 40%,
-                    #444444 50%,
-                    #1a1a1a 60%,
-                    #0a0a0a 100%);
+                    #000000 0%,
+                    #0a0a0a 40%,
+                    #222222 50%,
+                    #0a0a0a 60%,
+                    #000000 100%);
             background-size: 200% 100%;
 
             /* DYNAMIC POSITIONING (Linked to JS) */
-            /* v121 FIX: Default to 0% instead of -100% to prevent ghosting on idle */
             background-position: var(--light-x, 0%) 0;
             transition: background-position 0.1s ease-out;
 
@@ -419,11 +440,11 @@
             color: transparent;
             -webkit-text-fill-color: transparent;
 
-            /* 3D EDGE HIGHLIGHT */
-            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.9);
+            /* v122 FIX: Reduced text-shadow to prevent white artifacts */
+            text-shadow: 0.5px 0.5px 0px rgba(255, 255, 255, 0.4);
 
             /* Fallback */
-            background-color: #111;
+            background-color: #000;
         }
 
         /* MICRO-KERNING: Squeeze the top two lines tighter */
@@ -575,7 +596,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v121-INK-BLOCK</div>
+        <div>v122-STONE-GRAIN</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
