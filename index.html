@@ -401,28 +401,25 @@
             /* This creates the look of deep, dark stone */
             background-image: linear-gradient(135deg,
                     #0a0a0a 0%,
-                    /* Pure Ink Black (Deep Shadow) */
                     #1a1a1a 40%,
-                    /* Soft Charcoal */
                     #444444 50%,
-                    /* Mid-Grey (The Light Beam) */
                     #1a1a1a 60%,
-                    /* Return to Charcoal */
-                    #0a0a0a 100%
-                    /* Pure Ink Black */
-                );
+                    #0a0a0a 100%);
             background-size: 200% 100%;
 
             /* DYNAMIC POSITIONING (Linked to JS) */
-            background-position: var(--light-x, -100%) 0;
+            /* v121 FIX: Default to 0% instead of -100% to prevent ghosting on idle */
+            background-position: var(--light-x, 0%) 0;
             transition: background-position 0.1s ease-out;
 
             -webkit-background-clip: text;
             background-clip: text;
+
+            /* Fill Fallback */
             color: transparent;
+            -webkit-text-fill-color: transparent;
 
             /* 3D EDGE HIGHLIGHT */
-            /* Crisp white edge on bottom-right creates the "lip" of the carving */
             text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.9);
 
             /* Fallback */
