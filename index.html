@@ -8,12 +8,12 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v115-FINAL)</title>
+    <title>S. DEWSBERY | VIBE LAB (v117-TACTILE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;1,600&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap');
 
         :root {
             --glass-blur: 40px;
@@ -352,25 +352,187 @@
                 font-size: 3rem;
             }
         }
+
+        /* --- 1. THE STONE PLATE CONTAINER --- */
+        .manifesto-container {
+            background-color: #f0f0f0;
+            /* Matte Grey Surface */
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            color: #333;
+
+            /* THE STONE PLATE EFFECT: Subtle inset frame */
+            box-shadow:
+                inset -1px -1px 1px rgba(255, 255, 255, 0.7),
+                /* Highlight Bottom/Right */
+                inset 2px 2px 5px rgba(0, 0, 0, 0.05);
+            /* Shadow Top/Left */
+
+            border-radius: 4px;
+            /* Softens the stone cut */
+        }
+
+        /* --- 2. SYSTEM LABEL (Tech Contrast) --- */
+        .system-header {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #888;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+
+        /* --- 3. THE ENGRAVED HEADLINE --- */
+        .engraved-headline {
+            font-family: 'Playfair Display', serif;
+            /* Use Playfair as Canela alt */
+            font-weight: 600;
+            font-size: 5.5rem;
+            /* Massive Scale */
+            line-height: 0.95;
+            /* Tight block feel */
+            letter-spacing: -0.02em;
+            /* Base tracking */
+            margin-bottom: 2rem;
+            margin-top: 0;
+
+            /* PHYSICS: The Concave Gradient */
+            background-image: linear-gradient(135deg,
+                    rgba(0, 0, 0, 0.7) 0%,
+                    /* Deep Shadow */
+                    rgba(0, 0, 0, 0.5) 40%,
+                    rgba(0, 0, 0, 0.2) 50%,
+                    /* Light Sweep Path */
+                    rgba(0, 0, 0, 0.7) 60%,
+                    rgba(0, 0, 0, 0.1) 100%
+                    /* Reflection */
+                );
+            background-size: 200% 100%;
+
+            /* Clip gradient to text */
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            /* Pigment Removal */
+            color: transparent;
+            background-color: #333;
+            /* Fallback */
+
+            /* Edge Highlight */
+            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.95);
+        }
+
+        /* MICRO-KERNING: Squeeze the top two lines tighter */
+        .dense-pack {
+            letter-spacing: -0.04em;
+            margin-right: -0.02em;
+            /* Optical alignment fix */
+        }
+
+        /* ISOLATION: The Sanity Anchor */
+        .sanity-word {
+            display: block;
+            font-style: italic;
+            margin-top: 0.15em;
+            padding-left: 0.05em;
+            /* Optical alignment for italic slant */
+        }
+
+        /* ANIMATION: The Light Sweep */
+        .engraved-animate {
+            animation: shine 8s infinite linear;
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: -100% 0;
+            }
+
+            100% {
+                background-position: 200% 0;
+            }
+        }
+
+        /* --- 4. DIVIDER & BODY TEXT --- */
+        .manifesto-divider {
+            width: 40px;
+            height: 2px;
+            background-color: #ccc;
+            margin-bottom: 2rem;
+        }
+
+        .manifesto-body p {
+            font-family: 'Playfair Display', serif;
+            /* Use Playfair as Canela alt */
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: #444;
+            /* Dark Stone Grey */
+            margin-bottom: 1.2rem;
+            font-weight: 400;
+            max-width: 90%;
+            margin-top: 0;
+        }
+
+        /* --- 5. RIGHT COLUMN (Global Project Card Updates) --- */
+        /* Ensures the whole site feels like one design system */
+
+        h3 {
+            font-family: 'Playfair Display', serif !important;
+            /* Use Playfair as Canela alt */
+            font-weight: 600;
+            font-size: 1.5rem;
+            letter-spacing: -0.02em;
+            color: #222;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .experiment-card p {
+            font-family: 'Playfair Display', serif !important;
+            /* Use Playfair as Canela alt */
+            font-weight: 400;
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Keep Tags Monospace */
+        .mono-tag {
+            font-family: 'JetBrains Mono', monospace;
+        }
     </style>
 </head>
 
 <body>
     <div class="mesh-bg"></div>
     <div class="bento-grid">
-        <div class="glass-card hero-card">
-            <span class="mono-tag" style="margin-bottom: 2rem;">
-                <a href="https://www.linkedin.com/in/systemsstrategist" target="_blank"
-                    class="hired-link header-signature"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">S. DEWSBERY</a> //
-                <a href="https://github.com/Dewsbex/Vibe-Station-Alpha" target="_blank"
-                    style="text-decoration: none; color: inherit; cursor: pointer;">VIBE LAB</a>
-            </span>
-            <h1>I build things<br>to save my<br><span class="manifesto-highlight">sanity.</span></h1>
-            <div style="height: 1px; width: 40px; background: rgba(0,0,0,0.1); margin: 2rem 0;"></div>
-            <p class="hero-sub">The wall between "I wish this existed" and "I built this today" has collapsed.<br>
-                I use AI to kill friction in my family life.<br>
-                Small experiments. Zero fluff. High utility.</p>
+        <div class="glass-card hero-card" style="padding: 0; border: none; background: none; box-shadow: none;">
+            <section class="manifesto-container">
+                <div class="system-header">
+                    S. DEWSBERY // VIBE LAB
+                </div>
+
+                <h1 class="engraved-headline">
+                    <span class="dense-pack">
+                        I build things<br>
+                        to save my
+                    </span><br>
+                    <span class="sanity-word">sanity.</span>
+                </h1>
+
+                <div class="manifesto-divider"></div>
+
+                <div class="manifesto-body">
+                    <p>The wall between "I wish this existed" and "I built this today" has collapsed.</p>
+                    <p>I use AI to kill friction in my family life.</p>
+                    <p>Small experiments. Zero fluff. High utility.</p>
+                </div>
+            </section>
         </div>
         <div class="glass-card experiment-card">
             <span class="mono-tag">01 / LOGISTICS</span>
@@ -425,7 +587,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v115-FINAL</div>
+        <div>v117-TACTILE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -715,6 +877,38 @@
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
     <iframe src="https://social-etl-scheduler.onrender.com/"
         style="display:none; visibility:hidden; width:0; height:0; border:none;"></iframe>
+    <script>
+        // TACTILE ENGINE (v5)
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.manifesto-container');
+            const headline = document.querySelector('.engraved-headline');
+
+            if (container && headline) {
+                container.addEventListener('mousemove', (e) => {
+                    // 1. Get container geometry
+                    const rect = container.getBoundingClientRect();
+
+                    // 2. Calculate mouse X position as a percentage (0 to 1)
+                    const x = e.clientX - rect.left;
+                    const percent = x / rect.width;
+
+                    // 3. Map percentage to background position range
+                    // Range: -20% (left) to 120% (right) allows light to exit edges
+                    const moveRange = 140;
+                    const offset = -20;
+                    const bgPos = (percent * moveRange) + offset;
+
+                    // 4. Update CSS Variable
+                    headline.style.setProperty('--light-x', `${bgPos}%`);
+                });
+
+                // Optional: Reset light to center when mouse leaves
+                container.addEventListener('mouseleave', () => {
+                    headline.style.setProperty('--light-x', '50%');
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
