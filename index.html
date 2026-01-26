@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v122-STONE-GRAIN -->
+<!-- Build: v123-CONCAVE -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v122-STONE-GRAIN)</title>
+    <title>S. DEWSBERY | VIBE LAB (v123-CONCAVE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -410,8 +410,8 @@
         /* --- 3. THE ENGRAVED HEADLINE --- */
         .engraved-headline {
             font-family: 'Canela', 'Playfair Display', serif;
-            /* Increased weight to hold the engraving better */
-            font-weight: 700;
+            /* v5.5: Reduced weight for cleaner strokes */
+            font-weight: 600;
             font-size: 5.5rem;
             line-height: 0.95;
             letter-spacing: -0.02em;
@@ -420,17 +420,18 @@
             position: relative;
             z-index: 2;
 
-            /* v122 FIX: MUCH DARKER GRADIENT */
+            /* v5.5 CONCAVE GRADIENT FOR DARK MODE */
+            /* Simulates light entering carved depression */
             background-image: linear-gradient(135deg,
-                    #000000 0%,
-                    #0a0a0a 40%,
-                    #222222 50%,
-                    #0a0a0a 60%,
-                    #000000 100%);
+                    rgba(255, 255, 255, 0.05) 0%,
+                    rgba(255, 255, 255, 0.15) 35%,
+                    rgba(255, 255, 255, 0.4) 50%,
+                    rgba(255, 255, 255, 0.15) 65%,
+                    rgba(255, 255, 255, 0.05) 100%);
             background-size: 200% 100%;
 
             /* DYNAMIC POSITIONING (Linked to JS) */
-            background-position: var(--light-x, 0%) 0;
+            background-position: var(--light-x, -100%) 0;
             transition: background-position 0.1s ease-out;
 
             -webkit-background-clip: text;
@@ -440,8 +441,8 @@
             color: transparent;
             -webkit-text-fill-color: transparent;
 
-            /* v122 FIX: Reduced text-shadow to prevent white artifacts */
-            text-shadow: 0.5px 0.5px 0px rgba(255, 255, 255, 0.4);
+            /* v5.5 FIX: Darker shadow to prevent tail bleed */
+            text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.6);
 
             /* Fallback */
             background-color: #000;
@@ -596,7 +597,7 @@
     </div>
     <div class="system-footer">
         <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v122-STONE-GRAIN</div>
+        <div>v123-CONCAVE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
