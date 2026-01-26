@@ -389,41 +389,44 @@
         /* --- 3. THE ENGRAVED HEADLINE --- */
         .engraved-headline {
             font-family: 'Playfair Display', serif;
-            /* Use Playfair as Canela alt */
             font-weight: 600;
             font-size: 5.5rem;
-            /* Massive Scale */
             line-height: 0.95;
-            /* Tight block feel */
             letter-spacing: -0.02em;
-            /* Base tracking */
             margin-bottom: 2rem;
             margin-top: 0;
 
-            /* PHYSICS: The Concave Gradient */
+            /* THE PHYSICS: High-Contrast Gradient */
+            /* We use CSS Variable --light-x to move the light position */
             background-image: linear-gradient(135deg,
-                    rgba(0, 0, 0, 0.7) 0%,
+                    rgba(0, 0, 0, 0.95) 0%,
                     /* Deep Shadow */
-                    rgba(0, 0, 0, 0.5) 40%,
-                    rgba(0, 0, 0, 0.2) 50%,
-                    /* Light Sweep Path */
-                    rgba(0, 0, 0, 0.7) 60%,
-                    rgba(0, 0, 0, 0.1) 100%
+                    rgba(0, 0, 0, 0.85) 35%,
+                    rgba(0, 0, 0, 0.35) 50%,
+                    /* The Light Beam */
+                    rgba(0, 0, 0, 0.85) 65%,
+                    rgba(0, 0, 0, 0.15) 100%
                     /* Reflection */
                 );
             background-size: 200% 100%;
 
-            /* Clip gradient to text */
+            /* DYNAMIC POSITIONING */
+            /* Default: -100% (Off to the left) */
+            /* The JS updates --light-x based on cursor position */
+            background-position: var(--light-x, -100%) 0;
+
+            /* Smoothness factor: Slight drag for weight */
+            transition: background-position 0.1s ease-out;
+
             -webkit-background-clip: text;
             background-clip: text;
-
-            /* Pigment Removal */
             color: transparent;
-            background-color: #333;
-            /* Fallback */
 
-            /* Edge Highlight */
-            text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.95);
+            /* Crisp Chisel Highlight */
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 1);
+
+            /* Fallback */
+            background-color: #222;
         }
 
         /* MICRO-KERNING: Squeeze the top two lines tighter */
@@ -443,19 +446,7 @@
         }
 
         /* ANIMATION: The Light Sweep */
-        .engraved-animate {
-            animation: shine 8s infinite linear;
-        }
 
-        @keyframes shine {
-            0% {
-                background-position: -100% 0;
-            }
-
-            100% {
-                background-position: 200% 0;
-            }
-        }
 
         /* --- 4. DIVIDER & BODY TEXT --- */
         .manifesto-divider {
