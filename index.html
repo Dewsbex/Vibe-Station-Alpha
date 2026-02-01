@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v117.1-BASELINE -->
+<!-- Build: v121-BASELINE -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v117.1-BASELINE)</title>
+    <title>S. DEWSBERY | VIBE LAB (v121-BASELINE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -130,32 +130,27 @@
         }
 
         body {
+            /* THE ORB LIGHT GRADIENT */
+            /* Light Source: Signature Blue (#00BFFF) at 8% opacity (Top Left) */
+            /* Ground: Cool Platinum (#eef1f5) (Bottom Right) */
+            background: linear-gradient(135deg, rgba(0, 191, 255, 0.08) 0%, #eef1f5 100%);
+            
+            /* Locks the light source in place while scrolling */
+            background-attachment: fixed;
+            
+            color: #111;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            background: #EAEAEA;
-            font-family: var(--font-sans);
-            color: var(--text-main);
+            /* padding: 60px; Removed to respect bento grid layout */
+            min-height: 100vh;
+            box-sizing: border-box;
+            
+            /* PRO FINISH: Crisp typography */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
         }
 
-        .mesh-bg {
-            position: fixed;
-            inset: 0;
-            z-index: -1;
-            filter: blur(80px);
-            animation: pulse 10s ease-in-out infinite alternate;
-            background: radial-gradient(at 0% 0%, rgba(255, 107, 107, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 0%, rgba(78, 205, 196, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(150, 100, 255, 0.1) 0px, transparent 50%);
-        }
-
-        .mesh-bg::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
-            opacity: 0.15;
-            pointer-events: none;
-        }
 
         .bento-grid {
             display: grid;
@@ -602,14 +597,6 @@
 </head>
 
 <body>
-    <div class="mesh-bg"></div>
-    <div class="bento-grid">
-        <div class="glass-card hero-card" style="padding: 0; border: none; background: none; box-shadow: none;">
-            <section class="manifesto-container">
-                <div class="system-header">
-                    S. DEWSBERY // VIBE LAB
-                </div>
-
                 <img src="coat_of_arms.png" alt="Coat of Arms" class="coat-of-arms">
 
                 <h1 class="engraved-headline">
@@ -634,7 +621,7 @@
             <div class="visual-stage stage-social"></div>
             <div>
                 <h3>The Social ETL</h3>
-                <p style="margin:0; font-size: 0.9rem; color: #666;">Parses School Emails to Calendar.</p>
+                <p style="margin:0; font-size: 0.9rem; color: #666;">Heuristic Extraction Engine with Human-in-the-Loop Logic.</p>
             </div>
         </div>
         <div class="glass-card experiment-card">
@@ -691,7 +678,7 @@
             </div>
             <div><span class="status-dot"></span>SYSTEM NORMAL</div>
         </div>
-        <div>v117.1-BASELINE</div>
+        <div>v121-BASELINE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
