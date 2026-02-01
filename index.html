@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v116-BASELINE -->
+<!-- Build: v117-BASELINE -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v116-BASELINE)</title>
+    <title>S. DEWSBERY | VIBE LAB (v117-BASELINE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -24,6 +24,70 @@
             --font-serif: 'Playfair Display', serif;
             --font-mono: 'JetBrains Mono', monospace;
             --font-sans: 'Inter', sans-serif;
+
+            /* SPEC: GLOBAL VARIABLES (CSS CONFIG) */
+            --duration-instant: 0ms;
+            --duration-flash: 80ms;
+            --duration-mech: 120ms;
+            --duration-boot: 300ms;
+            --duration-draw: 1.2s;
+
+            /* EASING (THE PHYSICS ENGINE) */
+            --ease-editorial: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+            --ease-linear: linear;
+            --ease-stepped: steps(4, end);
+
+            /* VARIABLES */
+            --grid-unit: 4px;
+            --drift-amplitude: 0.5%;
+            --color-phosphor: #33FF00;
+        }
+
+        /* STATE MACHINE: VISUAL LOGIC */
+        body.system-engaging {
+            animation: voltage-sag 100ms var(--ease-linear);
+        }
+
+        @keyframes voltage-sag {
+            0% {
+                filter: brightness(1);
+            }
+
+            50% {
+                filter: brightness(0.8);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        body.workbench-mode {
+            background: #000;
+            cursor: crosshair;
+        }
+
+        body.workbench-mode .glass-card {
+            background: rgba(0, 20, 0, 0.8);
+            border-color: var(--color-phosphor);
+            color: var(--color-phosphor);
+            box-shadow: 0 0 15px rgba(51, 255, 0, 0.2);
+        }
+
+        body.workbench-mode .system-footer {
+            background: rgba(0, 10, 0, 0.9);
+            color: var(--color-phosphor);
+            border-top: 1px solid var(--color-phosphor);
+        }
+
+        body.workbench-mode .manifesto-container {
+            background-color: #000;
+            color: var(--color-phosphor);
+            background-image:
+                linear-gradient(rgba(51, 255, 0, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(51, 255, 0, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
 
         /* UPDATED: Signature Hover */
@@ -404,12 +468,23 @@
         .engraved-headline {
             font-family: 'Canela', 'Playfair Display', serif;
             font-weight: 600;
-            font-size: 5.5rem;
+            font-size: 3.5rem; /* Reduced from 5.5rem */
             line-height: 0.95;
             letter-spacing: -0.02em;
             margin-bottom: 2rem;
             margin-top: 0;
             color: #050505;
+        }
+
+        .coat-of-arms {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            margin-bottom: 2rem;
+            display: block;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            z-index: 2;
+            position: relative;
         }
 
         /* MICRO-KERNING: Squeeze the top two lines tighter */
@@ -442,7 +517,7 @@
         .manifesto-body p {
             font-family: 'Playfair Display', serif;
             /* Use Playfair as Canela alt */
-            font-size: 1.4rem;
+            font-size: 1.1rem; /* Reduced from 1.4rem */
             line-height: 1.6;
             color: #444;
             /* Dark Stone Grey */
@@ -476,8 +551,52 @@
         }
 
         /* Keep Tags Monospace */
-        .mono-tag {
-            font-family: 'JetBrains Mono', monospace;
+        /* BREAKER SWITCH */
+        .breaker-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            user-select: none;
+        }
+
+        .breaker-switch {
+            width: 44px;
+            height: 22px;
+            background: #222;
+            border: 2px solid #444;
+            border-radius: 4px;
+            position: relative;
+            cursor: pointer;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.8);
+            overflow: hidden;
+        }
+
+        .breaker-handle {
+            width: 18px;
+            height: 14px;
+            background: #881111;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            border-radius: 2px;
+            box-shadow: 0 2px 0 #500;
+            transition: transform var(--duration-mech) var(--ease-editorial), background 0.2s;
+        }
+
+        .breaker-label {
+            font-size: 9px;
+            color: #888;
+            font-weight: bold;
+        }
+
+        body.workbench-mode .breaker-handle {
+            transform: translateX(20px);
+            background: var(--color-phosphor);
+            box-shadow: 0 2px 0 #006400;
+        }
+
+        .breaker-handle.snapping {
+            transition: transform var(--duration-mech) var(--ease-snap) !important;
         }
     </style>
 </head>
@@ -490,6 +609,8 @@
                 <div class="system-header">
                     S. DEWSBERY // VIBE LAB
                 </div>
+
+                <img src="coat_of_arms.png" alt="Coat of Arms" class="coat-of-arms">
 
                 <h1 class="engraved-headline">
                     <span class="dense-pack">
@@ -560,8 +681,17 @@
         </div>
     </div>
     <div class="system-footer">
-        <div><span class="status-dot"></span>SYSTEM NORMAL</div>
-        <div>v116-BASELINE</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="breaker-container">
+                <span class="breaker-label">OFF</span>
+                <div class="breaker-switch" id="system-breaker">
+                    <div class="breaker-handle" id="breaker-handle"></div>
+                </div>
+                <span class="breaker-label">WORKBENCH</span>
+            </div>
+            <div><span class="status-dot"></span>SYSTEM NORMAL</div>
+        </div>
+        <div>v117-BASELINE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
@@ -827,6 +957,70 @@
                 };
                 animate();
             }
+
+            // --- BREAKER SWITCH LOGIC (Tactile Physics) ---
+            const breaker = document.getElementById('system-breaker');
+            const handle = document.getElementById('breaker-handle');
+            let resistanceInterval;
+            let isWorkbench = false;
+
+            const toggleSystemState = () => {
+                isWorkbench = !isWorkbench;
+
+                // 1. Trigger Voltage Sag
+                document.body.classList.add('system-engaging');
+                setTimeout(() => document.body.classList.remove('system-engaging'), 100);
+
+                // 2. Toggle Workbench Mode
+                if (isWorkbench) {
+                    document.body.classList.add('workbench-mode');
+                } else {
+                    document.body.classList.remove('workbench-mode');
+                }
+
+                // 3. Audio Triggers (thunk.mp3 placeholder - using synth for now)
+                if (audioCtx) {
+                    const click = audioCtx.createOscillator();
+                    const clickGain = audioCtx.createGain();
+                    click.frequency.setValueAtTime(isWorkbench ? 150 : 100, audioCtx.currentTime);
+                    clickGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    clickGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
+                    click.connect(clickGain);
+                    clickGain.connect(audioCtx.destination);
+                    click.start();
+                    click.stop(audioCtx.currentTime + 0.1);
+                }
+            };
+
+            breaker.addEventListener('mousedown', () => {
+                // Micro-Resistance Effect
+                resistanceInterval = setInterval(() => {
+                    const drift = (Math.random() - 0.5) * 2;
+                    handle.style.transform = `translateX(${isWorkbench ? 20 + drift : drift}px)`;
+                }, 50);
+            });
+
+            const resolveSwitch = () => {
+                clearInterval(resistanceInterval);
+                handle.classList.add('snapping');
+                toggleSystemState();
+
+                // Reset transform to let CSS take over with overshoot if specified
+                // But since we use translateX in JS, we need to clear it
+                handle.style.transform = '';
+
+                setTimeout(() => {
+                    handle.classList.remove('snapping');
+                }, 300);
+            };
+
+            breaker.addEventListener('mouseup', resolveSwitch);
+            breaker.addEventListener('mouseleave', () => {
+                if (resistanceInterval) {
+                    clearInterval(resistanceInterval);
+                    handle.style.transform = '';
+                }
+            });
 
             const createUplinkUI = (card, url) => {
                 card.style.cursor = 'pointer'; card.onclick = () => window.open(url, '_blank'); card.setAttribute('title',
