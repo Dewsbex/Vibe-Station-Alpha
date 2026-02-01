@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v123.0-BASELINE -->
+<!-- Build: v123.1-BASELINE -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v123.0-BASELINE)</title>
+    <title>S. DEWSBERY | VIBE LAB (v123.1-BASELINE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -300,10 +300,7 @@
             /* transition removed */
         }
 
-        .glass-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.1);
-        }
+        /* Legacy hover removed for Tactile Slab consistency */
 
         h1 {
             font-family: var(--font-serif);
@@ -450,8 +447,10 @@
             background-color: #FFFFFF; /* Pure White - No Transparency */
             
             /* 2. MATCHING THE PHYSICS (The Antigravity Shadow) */
-            /* This exactly matches the 'floating' look of the right-hand cards */
-            box-shadow: 0 20px 40px -5px rgba(0,0,0,0.1); 
+            /* Added thickness layer to match project cards */
+            box-shadow: 
+                0 6px 0 rgba(0,0,0,0.06), /* Thickness */
+                0 20px 40px -5px rgba(0,0,0,0.1); /* Floating Depth */
             
             /* 3. MATCHING THE GEOMETRY */
             border-radius: 24px; /* The Vibe Station Curve */
@@ -466,16 +465,23 @@
             align-items: center; /* Horizontally center flex items (like the image) */
             text-align: center;  /* Horizontally center text */
             justify-content: space-between; /* Space out top content vs bottom actions */
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s;
 
             /* Maintain texture but keep highlight/white feel */
             background-image:
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
             background-blend-mode: multiply;
         }
-
         /* Bevel edge removed for pure card look */
 
         /* --- 2. SYSTEM LABEL (Tech Contrast) --- */
+        .manifesto-card:hover {
+            transform: translateY(3px);
+            box-shadow: 
+                0 3px 0 rgba(0,0,0,0.06), 
+                0 10px 25px -5px rgba(0,0,0,0.1);
+        }
+
         .system-header {
             font-family: 'JetBrains Mono', 'Courier New', monospace;
             font-size: 0.75rem;
@@ -507,7 +513,7 @@
             display: block;
             margin: 0 auto 2rem auto; /* Auto margins for safety */
             width: 100%;
-            max-width: 180px; /* Adjust based on your preference */
+            max-width: 360px; /* 100% bigger for premium presence */
             height: auto;
             filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
             z-index: 2;
@@ -727,7 +733,7 @@
             </div>
             <div><span class="status-dot"></span>SYSTEM NORMAL</div>
         </div>
-        <div>v123.0-BASELINE</div>
+        <div>v123.1-BASELINE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
