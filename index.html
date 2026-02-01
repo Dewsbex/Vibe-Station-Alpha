@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v121.8-BASELINE -->
+<!-- Build: v121.9-BASELINE -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v121.8-BASELINE)</title>
+    <title>S. DEWSBERY | VIBE LAB (v121.9-BASELINE)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -157,12 +157,18 @@
 
         .bento-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
+            grid-template-columns: 0.7fr 1.3fr;
             gap: 24px;
             max-width: 1400px;
             margin: 100px auto;
             /* Added top breathing room */
             padding: 0 24px 100px 24px;
+        }
+
+        .experiment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
         }
 
         .glass-card {
@@ -337,8 +343,8 @@
         }
 
         .hero-card {
-            grid-column: span 6;
-            grid-row: span 2;
+            grid-column: span 1;
+            /* grid-row: span 2 removed for 2-col flex */
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -349,13 +355,16 @@
             /* Match tile top edge padding */
         }
 
+        .experiment-grid-wrapper {
+            grid-column: span 1;
+        }
+
         .experiment-card {
-            grid-column: span 3;
-            /* GRID INTEGRITY: Allow stretching to match Hero/Row height */
+            /* Now handled by experiment-grid subgrid */
         }
 
         .footer-card {
-            grid-column: span 12;
+            grid-column: span 2;
             margin-top: 2rem;
             padding-bottom: 4rem;
             /* Bottom breathing room */
@@ -437,8 +446,8 @@
 
         /* --- 1. LIGHT STONE PLATE + TEXTURE + BEVEL --- */
         .manifesto-container {
-            background-color: #f0f0f0;
-            padding: 4rem;
+            background-color: #FFFFFF;
+            padding: 4rem 2rem; /* Reduced horizontal padding to hug content */
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -486,7 +495,7 @@
         .engraved-headline {
             font-family: 'Canela', 'Playfair Display', serif;
             font-weight: 600;
-            font-size: 3.5rem; /* Reduced from 5.5rem */
+            font-size: 3.3rem; /* Slightly reduced to prevent squashing (v121.9) */
             line-height: 0.95;
             letter-spacing: -0.02em;
             margin-bottom: 2rem;
@@ -646,40 +655,44 @@
                 </div>
             </section>
         </div>
-        <div class="glass-card experiment-card">
-            <span class="mono-tag">01 / LOGISTICS</span>
-            <div class="visual-stage stage-social"></div>
-            <div>
-                <h3>The Social ETL</h3>
-                <p style="margin:0; font-size: 0.9rem; color: #666;">Scans email for family events and adds to Calendar.</p>
-            </div>
-        </div>
-        <div class="glass-card experiment-card">
-            <span class="mono-tag">02 / CURATION</span>
-            <div class="visual-stage stage-visit"></div>
-            <div>
-                <h3>The Trip Curator</h3>
-                <p style="margin:0; font-size: 0.9rem; color: #666;">Personalized Travel Agent.</p>
-            </div>
-        </div>
+        <div class="experiment-grid-wrapper">
+            <div class="experiment-grid">
+                <div class="glass-card experiment-card">
+                    <span class="mono-tag">01 / LOGISTICS</span>
+                    <div class="visual-stage stage-social"></div>
+                    <div>
+                        <h3>The Social ETL</h3>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Scans email for family events and adds to Calendar.</p>
+                    </div>
+                </div>
+                <div class="glass-card experiment-card">
+                    <span class="mono-tag">02 / CURATION</span>
+                    <div class="visual-stage stage-visit"></div>
+                    <div>
+                        <h3>The Trip Curator</h3>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Personalized Travel Agent.</p>
+                    </div>
+                </div>
 
-        <div class="glass-card experiment-card" id="knowledge-card">
-            <span class="mono-tag">03 / EDUCATION</span>
-            <div class="visual-stage stage-robot" id="robot-container">
-                <canvas id="face-overlay"></canvas>
-            </div>
-            <div>
-                <h3>The Socratic Orb</h3>
-                <p style="margin:0; font-size: 0.9rem; color: #666;">Voice-First AI Tutor.</p>
-            </div>
-        </div>
+                <div class="glass-card experiment-card" id="knowledge-card">
+                    <span class="mono-tag">03 / EDUCATION</span>
+                    <div class="visual-stage stage-robot" id="robot-container">
+                        <canvas id="face-overlay"></canvas>
+                    </div>
+                    <div>
+                        <h3>The Socratic Orb</h3>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Voice-First AI Tutor.</p>
+                    </div>
+                </div>
 
-        <div class="glass-card experiment-card">
-            <span class="mono-tag">04 / OPTIMIZATION</span>
-            <div class="visual-stage stage-dial"></div>
-            <div>
-                <h3>The Decision Dial</h3>
-                <p style="margin:0; font-size: 0.9rem; color: #666;">Randomized Choice Arbitrator.</p>
+                <div class="glass-card experiment-card">
+                    <span class="mono-tag">04 / OPTIMIZATION</span>
+                    <div class="visual-stage stage-dial"></div>
+                    <div>
+                        <h3>The Decision Dial</h3>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Randomized Choice Arbitrator.</p>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="glass-card footer-card">
@@ -708,7 +721,7 @@
             </div>
             <div><span class="status-dot"></span>SYSTEM NORMAL</div>
         </div>
-        <div>v121.8-BASELINE</div>
+        <div>v121.9-BASELINE</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
