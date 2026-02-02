@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Build: v0.07 -->
+<!-- Build: v0.08-PREMIUM -->
 <html lang="en">
 
 <head>
@@ -8,7 +8,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <title>S. DEWSBERY | VIBE LAB (v0.07)</title>
+    <title>S. DEWSBERY | VIBE LAB (v0.08)</title>
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23333'/></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -24,6 +24,10 @@
             --font-serif: 'Playfair Display', serif;
             --font-mono: 'JetBrains Mono', monospace;
             --font-sans: 'Inter', sans-serif;
+            
+            /* PREMIUM VISUALS (v0.08) */
+            --glass-blur: 20px;
+            --glass-saturate: 180%;
 
             /* SPEC: GLOBAL VARIABLES (CSS CONFIG) */
             --duration-instant: 0ms;
@@ -55,7 +59,7 @@
             }
 
             50% {
-                filter: brightness(0.8);
+                filter: brightness(0.85); /* Subtler dip for premium feel */
             }
 
             100% {
@@ -172,17 +176,19 @@
         }
 
         .glass-card {
-            background: #FFFFFF;
+            background: rgba(255, 255, 255, 0.85); /* Semi-transparent for glassmorphism */
             
             /* 1. DEFINITION: A crisp, subtle border to separate from the background */
-            border: 1px solid rgba(0,0,0,0.08);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+            -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
             
             /* 2. THICKNESS (The "3D" Effect) */
             /* Layer 1: A hard, dark offset to create the physical "slab" edge */
             /* Layer 2: A soft drop shadow for the "float" */
             box-shadow: 
                 0 6px 0 rgba(0,0,0,0.06), /* The "Thickness" (Solid Edge) */
-                0 20px 40px -5px rgba(0,0,0,0.1); /* The "Float" (Soft Shadow) */
+                0 20px 40px -5px rgba(0,0,0,0.15); /* The "Float" (Soft Shadow) - Darker for contrast */
                 
             border-radius: 24px;
             padding: 2.5rem;
@@ -647,6 +653,44 @@
         .breaker-handle.snapping {
             transition: transform var(--duration-mech) var(--ease-snap) !important;
         }
+
+        /* DIAGNOSTIC OVERLAY (v0.08) */
+        #diagnostic-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #33FF00;
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            letter-spacing: 0.2em;
+        }
+
+        .diag-grid-line {
+            position: absolute;
+            background: rgba(51, 255, 0, 0.2);
+        }
+
+        .diag-text {
+            z-index: 10;
+        }
+
+        /* BOOT ANIMATION (v0.08) */
+        @keyframes system-boot {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .bento-grid {
+            animation: system-boot 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
     </style>
 </head>
 
@@ -737,6 +781,9 @@
             </div>
         </div>
     </div>
+    <div id="diagnostic-overlay">
+        <div class="diag-text" id="diag-status">Initializing...</div>
+    </div>
     <div class="system-footer">
         <div style="display: flex; align-items: center; gap: 20px;">
             <div class="breaker-container">
@@ -748,12 +795,12 @@
             </div>
             <div><span class="status-dot"></span>SYSTEM NORMAL</div>
         </div>
-        <div>v0.07</div>
+        <div>v0.08-PREMIUM</div>
         <div id="audio-toggle" style="cursor: pointer;">OUTPUT: SILENT</div>
     </div>
     <script>
         window.addEventListener('load', () => {
-            console.log("VIBE-STATION-ALPHA v0.07 PREPARING...");
+            console.log("VIBE-STATION-ALPHA v0.08 PREPARING...");
             
             // HERALDIC VIDEO LOGIC
             const crestLauncher = document.getElementById('crest-launcher');
@@ -784,6 +831,45 @@
                     crestVid.style.display = 'none';
                     crestImg.style.display = 'block';
                 });
+            }
+
+            // DIAGNOSTIC MODE LOGIC (Cmd/Ctrl + .)
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key === '.') {
+                    e.preventDefault();
+                    toggleDiagnosticMode();
+                }
+            });
+
+            function toggleDiagnosticMode() {
+                const overlay = document.getElementById('diagnostic-overlay');
+                const status = document.getElementById('diag-status');
+                
+                if (overlay.style.display === 'flex') {
+                    overlay.style.display = 'none'; // Toggle OFF
+                    return;
+                }
+
+                // SEQUENCE START
+                overlay.style.display = 'flex';
+                status.innerText = "LOADING SENSORS...";
+                status.style.color = "#33FF00";
+
+                setTimeout(() => {
+                    status.innerText = "CALIBRATING GRID...";
+                }, 800);
+
+                setTimeout(() => {
+                    status.innerText = "SYSTEM NOMINAL";
+                    // In a real app, we'd trigger the grid lines here
+                }, 2000);
+
+                setTimeout(() => {
+                    overlay.style.display = 'none'; // Auto-hide after sequence? 
+                    // Keeping it open for now as per "engagement" or maybe close it
+                    // Let's close it to return to workbench
+                    overlay.style.display = 'none';
+                }, 3500);
             }
             const audioBtn = document.getElementById('audio-toggle');
             let audioState = false, audioCtx, oscillator, gainNode;
