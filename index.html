@@ -24,7 +24,7 @@
             --font-serif: 'Playfair Display', serif;
             --font-mono: 'JetBrains Mono', monospace;
             --font-sans: 'Inter', sans-serif;
-            
+
             /* PREMIUM VISUALS (v0.08) */
             --glass-blur: 20px;
             --glass-saturate: 180%;
@@ -59,7 +59,8 @@
             }
 
             50% {
-                filter: brightness(0.85); /* Subtler dip for premium feel */
+                filter: brightness(0.85);
+                /* Subtler dip for premium feel */
             }
 
             100% {
@@ -138,20 +139,20 @@
             /* Light Source (Top Left): Signature Blue (#00BFFF) at 8% opacity */
             /* Warmth (Bottom Right): Champagne Gold (#FFD700) at 10% opacity */
             background: linear-gradient(135deg, rgba(0, 191, 255, 0.08) 0%, rgba(255, 215, 0, 0.1) 100%);
-            
+
             /* Ensure a clean white base behind the transparency */
             background-color: #ffffff;
-            
+
             /* Locks the gradient in place while scrolling */
             background-attachment: fixed;
-            
+
             color: #111;
             font-family: 'Inter', sans-serif;
             margin: 0;
             padding: 60px;
             min-height: 100vh;
             box-sizing: border-box;
-            
+
             /* PRO FINISH: Crisp typography */
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -176,24 +177,27 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.85); /* Semi-transparent for glassmorphism */
-            
+            background: rgba(255, 255, 255, 0.85);
+            /* Semi-transparent for glassmorphism */
+
             /* 1. DEFINITION: A crisp, subtle border to separate from the background */
             border: 1px solid rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
             -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-            
+
             /* 2. THICKNESS (The "3D" Effect) */
             /* Layer 1: A hard, dark offset to create the physical "slab" edge */
             /* Layer 2: A soft drop shadow for the "float" */
-            box-shadow: 
-                0 6px 0 rgba(0,0,0,0.06), /* The "Thickness" (Solid Edge) */
-                0 20px 40px -5px rgba(0,0,0,0.15); /* The "Float" (Soft Shadow) - Darker for contrast */
-                
+            box-shadow:
+                0 6px 0 rgba(0, 0, 0, 0.06),
+                /* The "Thickness" (Solid Edge) */
+                0 20px 40px -5px rgba(0, 0, 0, 0.15);
+            /* The "Float" (Soft Shadow) - Darker for contrast */
+
             border-radius: 24px;
             padding: 2.5rem;
             transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s;
-            
+
             /* Optional: Ensure they don't look blurry */
             -webkit-font-smoothing: antialiased;
             display: flex;
@@ -202,12 +206,13 @@
 
         /* HOVER STATE: Pressing the button/slab */
         .glass-card:hover {
-            transform: translateY(3px); /* Physically moves down */
-            
+            transform: translateY(3px);
+            /* Physically moves down */
+
             /* Reduces the "Thickness" shadow as it gets closer to the "ground" */
-            box-shadow: 
-                0 3px 0 rgba(0,0,0,0.06), 
-                0 10px 25px -5px rgba(0,0,0,0.1);
+            box-shadow:
+                0 3px 0 rgba(0, 0, 0, 0.06),
+                0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .visual-stage {
@@ -279,6 +284,11 @@
         .stage-dial::before,
         .stage-dial::after {
             background-image: url('https://raw.githubusercontent.com/Dewsbex/Vibe-Station-Alpha/main/compass_dial.png');
+        }
+
+        .stage-news::before,
+        .stage-news::after {
+            background-image: url('https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80');
         }
 
         .stage-robot {
@@ -450,27 +460,34 @@
         /* --- 1. LIGHT STONE PLATE + TEXTURE + BEVEL --- */
         .manifesto-card {
             /* 1. MATCHING THE PAPER */
-            background-color: #FFFFFF; /* Pure White - No Transparency */
-            
+            background-color: #FFFFFF;
+            /* Pure White - No Transparency */
+
             /* 2. MATCHING THE PHYSICS (The Antigravity Shadow) */
             /* Added thickness layer to match project cards */
-            box-shadow: 
-                0 6px 0 rgba(0,0,0,0.06), /* Thickness */
-                0 20px 40px -5px rgba(0,0,0,0.1); /* Floating Depth */
-            
+            box-shadow:
+                0 6px 0 rgba(0, 0, 0, 0.06),
+                /* Thickness */
+                0 20px 40px -5px rgba(0, 0, 0, 0.1);
+            /* Floating Depth */
+
             /* 3. MATCHING THE GEOMETRY */
-            border-radius: 24px; /* The Vibe Station Curve */
+            border-radius: 24px;
+            /* The Vibe Station Curve */
             padding: 3rem;
             height: 100%;
             box-sizing: border-box;
             position: relative;
-            
+
             /* 4. THE ALIGNMENT FIX (Centering) */
             display: flex;
             flex-direction: column;
-            align-items: center; /* Horizontally center flex items (like the image) */
-            text-align: center;  /* Horizontally center text */
-            justify-content: space-between; /* Space out top content vs bottom actions */
+            align-items: center;
+            /* Horizontally center flex items (like the image) */
+            text-align: center;
+            /* Horizontally center text */
+            justify-content: space-between;
+            /* Space out top content vs bottom actions */
             transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.2s;
 
             /* Maintain texture but keep highlight/white feel */
@@ -478,14 +495,15 @@
                 url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
             background-blend-mode: multiply;
         }
+
         /* Bevel edge removed for pure card look */
 
         /* --- 2. SYSTEM LABEL (Tech Contrast) --- */
         .manifesto-card:hover {
             transform: translateY(3px);
-            box-shadow: 
-                0 3px 0 rgba(0,0,0,0.06), 
-                0 10px 25px -5px rgba(0,0,0,0.1);
+            box-shadow:
+                0 3px 0 rgba(0, 0, 0, 0.06),
+                0 10px 25px -5px rgba(0, 0, 0, 0.1);
         }
 
         .system-header {
@@ -504,7 +522,8 @@
         .brand-title {
             font-family: 'Canela', 'Playfair Display', serif;
             font-weight: 600;
-            font-size: 3.3rem; /* Slightly reduced to prevent squashing (v121.9) */
+            font-size: 3.3rem;
+            /* Slightly reduced to prevent squashing (v121.9) */
             line-height: 0.95;
             letter-spacing: -0.02em;
             margin: 0 auto 2rem auto;
@@ -517,7 +536,8 @@
         /* --- 2. THE COAT OF ARMS (v123 Centering) --- */
         .heraldic-container {
             width: 100%;
-            max-width: 520px; /* Increased to match video footprint and prevent clipping */
+            max-width: 520px;
+            /* Increased to match video footprint and prevent clipping */
             margin: 0 auto 2rem auto;
             position: relative;
             cursor: pointer;
@@ -532,7 +552,7 @@
             display: block;
             width: 100%;
             height: auto;
-            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
             z-index: 2;
         }
 
@@ -565,14 +585,15 @@
 
         .context-text {
             text-align: center;
-            margin: 0 auto; 
+            margin: 0 auto;
             max-width: 90%;
         }
 
         .context-text p {
             font-family: 'Playfair Display', serif;
             /* Use Playfair as Canela alt */
-            font-size: 1.1rem; /* Reduced from 1.4rem */
+            font-size: 1.1rem;
+            /* Reduced from 1.4rem */
             line-height: 1.6;
             color: #444;
             /* Dark Stone Grey */
@@ -663,7 +684,8 @@
             height: 100vh;
             background: rgba(0, 0, 0, 0.95);
             z-index: 9999;
-            display: none; /* Hidden by default */
+            display: none;
+            /* Hidden by default */
             flex-direction: column;
             align-items: center;
             justify-content: center;
@@ -684,8 +706,15 @@
 
         /* BOOT ANIMATION (v0.08) */
         @keyframes system-boot {
-            0% { opacity: 0; transform: translateY(10px); }
-            100% { opacity: 1; transform: translateY(0); }
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .bento-grid {
@@ -733,7 +762,8 @@
                     <div class="visual-stage stage-social"></div>
                     <div>
                         <h3>The Social ETL</h3>
-                        <p style="margin:0; font-size: 0.9rem; color: #666;">Scans email for family events and adds to Calendar.</p>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Scans email for family events and adds to
+                            Calendar.</p>
                     </div>
                 </div>
                 <div class="glass-card experiment-card">
@@ -762,6 +792,15 @@
                     <div>
                         <h3>The Decision Dial</h3>
                         <p style="margin:0; font-size: 0.9rem; color: #666;">Randomized Choice Arbitrator.</p>
+                    </div>
+                </div>
+
+                <div class="glass-card experiment-card">
+                    <span class="mono-tag">05 / INTELLIGENCE</span>
+                    <div class="visual-stage stage-news"></div>
+                    <div>
+                        <h3>Sovereign Intelligence</h3>
+                        <p style="margin:0; font-size: 0.9rem; color: #666;">Real-time News & OSINT Dashboard.</p>
                     </div>
                 </div>
             </div>
@@ -801,7 +840,7 @@
     <script>
         window.addEventListener('load', () => {
             console.log("VIBE-STATION-ALPHA v0.08 PREPARING...");
-            
+
             // HERALDIC VIDEO LOGIC
             const crestLauncher = document.getElementById('crest-launcher');
             const crestImg = document.getElementById('crest-image');
@@ -844,7 +883,7 @@
             function toggleDiagnosticMode() {
                 const overlay = document.getElementById('diagnostic-overlay');
                 const status = document.getElementById('diag-status');
-                
+
                 if (overlay.style.display === 'flex') {
                     overlay.style.display = 'none'; // Toggle OFF
                     return;
